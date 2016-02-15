@@ -76,6 +76,8 @@ $custom = get_post_custom( $post->ID );
 							</span>
 						</li>
 										
+						<?php if (has_post_thumbnail()) : ?>				
+										
 						<li class="sharetool sharetool-pinterest">
 							<span class="wrap-shareicon st-sharethis st_pinterest_custom" >
 								<div class="icon">
@@ -83,6 +85,8 @@ $custom = get_post_custom( $post->ID );
 								</div>											
 							</span>
 						</li>
+						
+						<?php endif; ?>
 	 
 	 					<li class="sharetool sharetool-email">
 							<a href="mailto:?subject=<?php the_title(); ?>&amp;body=<?php the_permalink(); ?>">

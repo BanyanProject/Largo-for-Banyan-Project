@@ -60,11 +60,23 @@ class Banyan_Project_Related_Articles_Widget extends WP_Widget {
 	        	<article class="post-type-news">
 		        	<div class="entry-content clearfix">
 		        		
+		        		<?php if (bp_get_post_type(get_the_ID())->slug == 'blog') : ?>
+		        		
+	        			<?php echo(get_avatar(get_the_author_meta('ID'),'thumbnail',array('class' => 'alignleft'))); ?>
+	        			
+		        		<h5 class="top-tag"><?php largo_top_term(); ?></h5>
+
+						<?php else : ?>
+
 	        			<?php echo(get_the_post_thumbnail(get_the_ID(),'thumbnail',array('class' => 'alignleft'))); ?>
+	        			
+	        			<?php endif; ?>
 	        			
 		        		<h4 class="entry-title"><a href="<?php the_permalink(); ?>" ><?php the_title(); ?></a></h4>
 	        		
 	        			<?php largo_excerpt(get_the_ID(), 1, false, '', true); ?>
+
+						<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 	        			
 		        	</div>
 	        	</article>	

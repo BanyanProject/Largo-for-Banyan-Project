@@ -16,6 +16,8 @@
 
 		<?php largo_excerpt( $post, 4, true, __('Continue&nbsp;Reading', 'largo'), true, false ); ?>
 
+		<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
+
 		</div><!-- .entry-content -->
 
 </article><!-- #post-<?php the_ID(); ?> -->

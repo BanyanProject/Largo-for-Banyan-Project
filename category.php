@@ -71,7 +71,7 @@ $all_posts = largo_get_featured_posts( array(
 
 
 	<div class="row row-fluid clearfix">
-		<div class="stories col-md-8" role="main" id="content">
+		<div class="stories col-main" role="main" id="content">
 						
 			<?php
 		

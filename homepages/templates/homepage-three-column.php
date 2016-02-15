@@ -43,7 +43,7 @@ $homefeatured = largo_get_featured_posts(array(
 	
 	<div class="row">
 		
-		<div class="col-md-8">
+		<div class="col-main">
 			
 			<div class="row">
 

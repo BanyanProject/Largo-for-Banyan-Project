@@ -1,54 +1,38 @@
-<?php
-if ( is_front_page() || is_home() || !of_get_option( 'show_sticky_nav' ) ): ?>
-	<div class="global-nav-bg">
-		<div class="global-nav">
-			<nav id="top-nav">
 
-				<span class="visuallyhidden">
-					<a href="#main" title="<?php esc_attr_e( 'Skip to content', 'largo' ); ?>"><?php _e( 'Skip to content', 'largo' ); ?></a>
-				</span>
-				<?php
-					$top_args = array(
-						'theme_location' => 'global-nav',
-						'depth'		 => 1,
-						'container'	 => false,
-					);
-					largo_nav_menu($top_args);
-				?>
-				<div class="nav-right">
-					<?php if ( of_get_option( 'show_header_social') ) { ?>
-						<ul id="header-social" class="social-icons visible-desktop">
-							<?php largo_social_links(); ?>
-						</ul>
-					<?php } ?>
-
-					<?php if (!is_user_logged_in() || of_get_option( 'show_donate_button')) : ?>
-						
-						<ul class="menu">
-							
-						<?php if (!is_user_logged_in()) : ?>
-							<li>
-								<a href="/login">Login</a>
-							</li>	
-
-						<?php endif; ?>
-
-						<?php if ( of_get_option( 'show_donate_button') ) :
-								if ($donate_link = of_get_option('donate_link')) : ?>
-								
-								<li class="donate">
-									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">
-										<span><?php echo esc_html(of_get_option('donate_button_text')); ?></span>
-									</a>
-								</li>
-						<?php endif; endif; ?>
-						
-						</ul>
-
-					<?php endif; ?>
+	<div class="global-nav-wrapper-banyan">
+		<div class="global-nav-holder-banyan">
+			<div class="global-nav-container">
+				<nav id="global-nav" class="navbar clearfix">
+	
+					<span class="visuallyhidden">
+						<a href="#main" title="<?php esc_attr_e( 'Skip to content', 'largo' ); ?>"><?php _e( 'Skip to content', 'largo' ); ?></a>
+					</span>
 					
-				</div>
-			</nav>
-		</div> <!-- /.global-nav -->
-	</div> <!-- /.global-nav-bg -->
-<?php endif;
+					<span class="menu-text menu-text-left-border"><?php echo(date("l F j, Y")); ?></span>
+									
+					<?php
+						$top_args = array(
+							'theme_location' => 'global-nav',
+							'depth'		 => 1,
+							'container'	 => false,
+						);
+						largo_nav_menu($top_args);
+					?>
+					
+					<div class="nav-right">
+						
+						<div class="wrap-navbar-twitter">
+							<a href="<?php echo(esc_attr(of_get_option('twitter_link'))); ?>" class="twitter-follow-button" data-show-count="false">Follow @BanyanProject</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</div>
+						
+						<div class="wrap-navbar-facebook">
+							<div class="fb-like" data-href="<?php echo(esc_attr(of_get_option('facebook_link'))); ?>" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
+						</div>
+						
+					</div>
+					
+				</nav>
+			</div> <!-- /.global-nav-container -->
+			
+		</div>	
+	</div> <!-- /.global-nav-wrapper -->

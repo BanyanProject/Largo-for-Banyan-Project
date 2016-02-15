@@ -16,7 +16,7 @@ add_filter('body_class', function($classes) {
 get_header();
 ?>
 
-<div id="content" class="col-md-8" role="main">
+<div id="content" class="col-main" role="main">
 
 	<?php
 		while ( have_posts() ) : the_post();
@@ -55,5 +55,7 @@ else
 	get_sidebar(); 
 
 ?>
+
+<div class="clearfix"></div>
 
 <?php get_footer();

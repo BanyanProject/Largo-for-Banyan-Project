@@ -40,8 +40,8 @@
 		
 		?>
 		
-		<div class="ad-outerwrap ad-outerwrap-footer">
-			<div class="ad-innerwrap ad-innerwrap-footer">
+		<div class="ad-outerwrap-footer">
+			<div class="ad-innerwrap-footer">
 				<?php echo adrotate_group(3); ?>
 			</div>
 		</div>

@@ -59,28 +59,6 @@
 
 	?>
 
-	<?php
-		if ( SHOW_GLOBAL_NAV === TRUE ) {
-
-			/**
-			 * Fires before the Largo global navigation content.
-			 *
-			 * @since 0.4
-			 */
-			do_action( 'largo_before_global_nav' );
-
-			get_template_part( 'partials/nav', 'global' );
-
-			/**
-			 * Fires after the Largo global navigation content.
-			 *
-			 * @since 0.4
-			 */
-			do_action( 'largo_after_global_nav' );
-
-		}
-	?>
-
 	<div id="page" class="hfeed clearfix">
 
 		<?php
@@ -88,6 +66,30 @@
 				get_template_part( 'partials/nav', 'sticky' );
 			}
 		?>
+
+		<?php
+			if (is_front_page() && SHOW_GLOBAL_NAV === TRUE ) {
+	
+				/**
+				 * Fires before the Largo global navigation content.
+				 *
+				 * @since 0.4
+				 */
+				do_action( 'largo_before_global_nav' );
+	
+				get_template_part( 'partials/nav', 'global' );
+	
+				/**
+				 * Fires after the Largo global navigation content.
+				 *
+				 * @since 0.4
+				 */
+				do_action( 'largo_after_global_nav' );
+	
+			}
+		?>
+
+
 
 		<?php get_template_part('partials/header-ad-zone'); ?>
 
@@ -126,13 +128,14 @@
 
 		<?php 
 		/**
-		 * Leaderboard Advertising
+		 * Homepage - Signups and Leaderboard Advertising
 		 **/	
 			
 		if (is_front_page()) { ?>
 			
 			<div class="ad-outerwrap ad-outerwrap-leaderboard ">
 				<div class="ad-innerwrap ad-innerwrap-leaderboard">
+					<div>Advertisement</div>
 					<?php echo adrotate_group(1); ?>
 				</div>			
 			</div>

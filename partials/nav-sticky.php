@@ -7,6 +7,9 @@
 			
 			<nav id="sticky-nav" class="sticky-navbar navbar clearfix">
 				
+				<span class="visuallyhidden">
+					<a href="#main" title="<?php esc_attr_e( 'Skip to content', 'largo' ); ?>"><?php _e( 'Skip to content', 'largo' ); ?></a>
+				</span>
 				<div class="container">
 					<div class="nav-right">
 

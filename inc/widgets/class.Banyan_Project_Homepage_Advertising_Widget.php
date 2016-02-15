@@ -30,7 +30,8 @@ class Banyan_Project_Homepage_Advertising_Widget extends WP_Widget {
 		
         <div class="ad-outerwrap ad-outerwrap-sidebar">
         	<div class="ad-innerwrap ad-innerwrap-sidebar">
-        		<?php echo adrotate_group(2); ?>
+ 				<div>Advertisement</div>
+       			<?php echo adrotate_group(2); ?>
         	</div>
       	</div>		
 		

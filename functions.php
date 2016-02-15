@@ -6,24 +6,30 @@
 
 /* Includes */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . ABSPATH . 'wp-content/themes/Largo-BP/inc');
 
 if (!class_exists('Banyan_Project_Calendar_Widget'))
-	require_once('class.Banyan_Project_Calendar_Widget.php');
+	require_once('inc/widgets/class.Banyan_Project_Calendar_Widget.php');
 
 if (!class_exists('Banyan_Project_Events_Listing_Widget'))
-	require_once('class.Banyan_Project_Events_Listing_Widget.php');
+	require_once('inc/widgets/class.Banyan_Project_Events_Listing_Widget.php');
 
 if (!class_exists('Banyan_Project_Related_Events_Widget'))
-	require_once('class.Banyan_Project_Related_Events_Widget.php');
+	require_once('inc/widgets/class.Banyan_Project_Related_Events_Widget.php');
 
 if (!class_exists('Banyan_Project_Related_Articles_Widget'))
-	require_once('class.Banyan_Project_Related_Articles_Widget.php');
+	require_once('inc/widgets/class.Banyan_Project_Related_Articles_Widget.php');
 
 if (!class_exists('Banyan_Project_Homepage_Advertising_Widget'))
-	require_once('class.Banyan_Project_Homepage_Advertising_Widget.php');
+	require_once('inc/widgets/class.Banyan_Project_Homepage_Advertising_Widget.php');
 
-require_once('database.php');
+if (!class_exists('Banyan_Project_Email_Signup_Widget'))
+	require_once('inc/widgets/class.Banyan_Project_Email_Signup_Widget.php');
+
+if (!class_exists('Banyan_Project_Recent_Blog_Posts_Widget'))
+	require_once('inc/widgets/class.Banyan_Project_Recent_Blog_Posts_Widget.php');
+
+
+require_once('inc/database.php');
 
 /* Required Variables */
 
@@ -33,13 +39,65 @@ if (!defined('TIMEZONE'))
 if (!defined('CLICKSTREAM_TABLE'))
 	define('CLICKSTREAM_TABLE','click_clickstream');
 
-define('SHOW_GLOBAL_NAV',false);
+define('SHOW_GLOBAL_NAV',true);
 define('SHOW_MAIN_NAV',false);
 define('SHOW_SECONDARY_NAV',false);
 
 /* Config */
 	
-date_default_timezone_set(TIMEZONE);
+date_default_timezone_set(TIMEZONE); 
+ 
+/**
+ * Meta boxes
+ */
+ 
+function add_post_types_meta_box() {
+	add_meta_box('bp-post-types-meta', 'Post Type', 'bp_post_types_meta_box', 'post', 'side', 'high');	
+} 
+ 
+function bp_post_types_meta_box() {
+	global $post;
+	echo '<input type="hidden" name="post_type_noncename" id="post_type_noncename" value="' .
+		wp_create_nonce('post_type_noncename') . '" />';
+     
+    // Get the location data if its already been entered
+	$pt = bp_get_post_type($post->ID);
+	$terms = get_terms('post-type', 'hide_empty=0');
+
+	echo '<p>Select and save the appropriate post type.  The post type will determine what custom fields are displayed in this editor.</p>';
+	echo '<select name="_post_type" id="post_theme">'."\n";
+
+    foreach ($terms as $term) {
+    	if (!isset($pt->slug) && $term->slug == 'news')
+        	echo '<option class="post-type-option" value="' . $term->slug . '" selected>'. $term->name . "</option>\n"; 
+		elseif ($pt->slug == $term->slug)
+        	echo '<option class="post-type-option" value="' . $term->slug . '" selected>'. $term->name . "</option>\n"; 
+		else
+        	echo '<option class="post-type-option" value="' . $term->slug . '">'. $term->name . "</option>\n"; 
+    }
+	echo "</select>\n";  
+	
+}
+
+add_action( 'add_meta_boxes', 'add_post_types_meta_box');
+ 
+function bp_save_post_type_meta($post_id, $post) {
+	
+	if ( !wp_verify_nonce( $_POST['post_type_noncename'], 'post_type_noncename' ))
+		return $post->ID;
+
+	if ( !current_user_can( 'edit_post', $post->ID ))
+		return $post->ID;
+
+	if (!is_string($_POST['_post_type']))
+		return $post->ID;
+	
+	$pt = $_POST['_post_type'];
+	
+	wp_set_object_terms($post->ID, $pt, 'post-type');
+}
+
+add_action('save_post', 'bp_save_post_type_meta', 1, 2); // save the custom fields
 
  
 /**
@@ -358,15 +416,15 @@ function largo_sidebar_span_class() {
 			if ( $custom_template == 'single-one-column.php' )
 				return 'col-md-2';
 			else if ( $custom_template !== 'single-one-column.php' )
-				return 'col-md-4';
+				return 'col-right-sidebar';
 		}
 
 		if ( $default_template == 'normal' )
 			return 'col-md-2';
 		else
-			return 'col-md-4';
+			return 'col-right-sidebar';
 	} else
-		return 'col-md-4';
+		return 'col-right-sidebar';
 }
  
  
@@ -468,6 +526,8 @@ function register_custom_widget() {
 	register_widget( 'Banyan_Project_Related_Events_Widget' );
 	register_widget( 'Banyan_Project_Related_Articles_Widget' );
 	register_widget( 'Banyan_Project_Homepage_Advertising_Widget' );
+	register_widget( 'Banyan_Project_Email_Signup_Widget' );
+	register_widget( 'Banyan_Project_Recent_Blog_Posts_Widget' );
 }
 add_action('widgets_init', 'register_custom_widget', 1);
 
@@ -490,7 +550,7 @@ function enqueue_custom_script() {
 	
 	wp_enqueue_script(
 		'bootstrap'
-		, '/wp-content/themes/Largo-BP/js/bootstrap'. $suffix . '.js'
+		, '/wp-content/themes/Largo-for-Banyan-Project/js/bootstrap'. $suffix . '.js'
 		, array('jquery')
 		, '3.3.5'
 		, true
@@ -498,7 +558,7 @@ function enqueue_custom_script() {
 	
 	wp_enqueue_script(
 		'moment'
-		,'/wp-content/themes/Largo-BP/js/moment.js'
+		,'/wp-content/themes/Largo-for-Banyan-Project/js/moment.js'
 		,array()
 		,'2.10.6'
 		,true
@@ -506,7 +566,7 @@ function enqueue_custom_script() {
 	
 	wp_enqueue_script(
 		'underscore'
-		,'/wp-content/themes/Largo-BP/js/underscore' . $suffix . '.js'
+		,'/wp-content/themes/Largo-for-Banyan-Project/js/underscore' . $suffix . '.js'
 		,array()
 		,'1.8.3'
 		,true
@@ -514,7 +574,7 @@ function enqueue_custom_script() {
 
 	wp_enqueue_script(
 		'clndr'
-		,'/wp-content/themes/Largo-BP/js/clndr' . $suffix . '.js'
+		,'/wp-content/themes/Largo-for-Banyan-Project/js/clndr' . $suffix . '.js'
 		,array()
 		,'1.2.16'
 		,true
@@ -522,7 +582,7 @@ function enqueue_custom_script() {
 
 	wp_enqueue_script(
 		'bootstrap-datetimepicker'
-		,'/wp-content/themes/Largo-BP/js/bootstrap-datetimepicker.min.js'
+		,'/wp-content/themes/Largo-for-Banyan-Project/js/bootstrap-datetimepicker.min.js'
 		,array('jquery','bootstrap')
 		,'4.17.37'
 		,true
@@ -530,7 +590,7 @@ function enqueue_custom_script() {
 
 	wp_enqueue_script(
 		'banyan'
-		,'/wp-content/themes/Largo-BP/js/banyan.js'
+		,'/wp-content/themes/Largo-for-Banyan-Project/js/banyan.js'
 		,array()
 		,'0.1'
 		,true

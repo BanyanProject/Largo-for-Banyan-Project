@@ -31,6 +31,8 @@ $values = get_post_custom( $post->ID );
 	    	<h5 class="tag-list"><strong><?php _e('More about:', 'largo'); ?></strong> <?php largo_categories_and_tags( 8 ); ?></h5>
 	    <?php } ?>
 
+		<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
+
 		</div><!-- .entry-content -->
 
 </article><!-- #post-<?php the_ID(); ?> -->

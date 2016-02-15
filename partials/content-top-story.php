@@ -1,4 +1,4 @@
-							<article id="post-<?php echo $post->ID ?> class="top-story">
+							<article id="post-<?php echo $post->ID ?>" class="top-story clearfix">
 					
 								<header>	
 						
@@ -30,5 +30,7 @@
 										<?php }											
 									} ?>
 								</div>
+		
+							<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 								
 							</article>

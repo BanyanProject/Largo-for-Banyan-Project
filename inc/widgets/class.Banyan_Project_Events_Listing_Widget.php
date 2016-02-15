@@ -71,7 +71,7 @@ class Banyan_Project_Events_Listing_Widget extends WP_Widget {
         			
 	        		<h4 class="entry-title"><a href="/event/<?php echo($event->ID); ?>" ><?php echo($event->post_title); ?></a></h4>
         		
-        			<div class="teaser-date-location">
+        			<div class="teaser-date-location clearfix">
         				<span class="upcoming-start-date"><?php echo(date("F j",strtotime($event->start_date))); ?></span>								
 						<?php if ($event->start_date != $event->end_date) : ?>
 						- <span class="upcoming-end-date"><?php echo(date("F j",strtotime($event->end_date))); ?></span>,								
@@ -81,6 +81,8 @@ class Banyan_Project_Events_Listing_Widget extends WP_Widget {
         				
         				<span class="event-location"><?php echo($event->location_title); ?></span>       				
         			</div>
+  
+  					<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
         		
 	        	</div>
         	</article>	

@@ -93,7 +93,7 @@ get_header();
 		</header>
 
 		<div class="row row-fluid clearfix">
-			<div class="stories col-md-8" role="main" id="content">
+			<div class="stories col-main" role="main" id="content">
 			<?php
 				// and finally wind the posts back so we can go through the loop as usual
 				rewind_posts();

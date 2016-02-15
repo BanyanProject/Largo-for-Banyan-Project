@@ -7,7 +7,7 @@
  */
 get_header(); ?>
 
-<div id="content" class="col-md-8" role="main">
+<div id="content" class="col-main" role="main">
 	<?php get_template_part( 'partials/content', 'not-found' ); ?>
 </div><!--#content -->
 
