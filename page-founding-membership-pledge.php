@@ -7,7 +7,7 @@ require_once('inc/class.FormSubmission.php');
 
 wp_enqueue_script(
 	'founding-membership-pledge',
-	'/wp-content/themes/Largo-BP/js/founding-membership-pledge.js',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/founding-membership-pledge.js',
 	array('jquery'),
 	'0.1',
 	true
@@ -114,7 +114,7 @@ get_header();
 
 ?>
 
-<div id="content" role="main">
+<div id="content" class="col-md-10 col-md-offset-1" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();

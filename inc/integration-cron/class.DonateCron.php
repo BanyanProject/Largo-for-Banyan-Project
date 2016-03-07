@@ -1,8 +1,8 @@
 <?php
 
-class ContactCron extends IntegrationCron {
+class DonateCron extends IntegrationCron {
 
-	protected $dbtable = 'frm_contact';
+	protected $dbtable = 'frm_donate';
 
 	public function run()
 	{	
@@ -43,10 +43,26 @@ class ContactCron extends IntegrationCron {
 			$person = $res['person'];
 			
 			unset($res);
+
+			// Donate Record
 			
-			// Tags
-						
-			$tags = array('form-contact');
+			$donation = $this->makeDonation($rec,$person);
+			$res = $api->post('/api/v1/donations', array('donation' => $donation));
+		
+			if (isset($res['code']))
+			{
+				$this->errors++; 
+				$this->log .= $rec['email']."\tdonations\terror ".$res['code']."\n";
+				continue;										
+			} 
+				
+			$this->log .= $rec['email']."\tdonations\tsuccess\n";
+			
+			unset($res);
+			
+			// Tags and Email Signup
+			
+			$tags = array('form-donate');
 						
 			if ($rec['email_signup']) {
 				$tags[] = 'form-email';
@@ -58,6 +74,7 @@ class ContactCron extends IntegrationCron {
 			unset($person, $tags);	
 		}
 	}
+
 	
 }
 

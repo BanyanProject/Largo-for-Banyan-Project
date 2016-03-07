@@ -1,8 +1,8 @@
 <?php
 
-class ContactCron extends IntegrationCron {
+class SendFileCron extends IntegrationCron {
 
-	protected $dbtable = 'frm_contact';
+	protected $dbtable = 'frm_file';
 
 	public function run()
 	{	
@@ -41,12 +41,13 @@ class ContactCron extends IntegrationCron {
 				
 			$this->log .= $rec['email']."\tpeople/push\tsuccess\n";
 			$person = $res['person'];
+			$id = $res['person']['id'];
 			
 			unset($res);
 			
 			// Tags
-						
-			$tags = array('form-contact');
+			
+			$tags = array('form-send-file');
 						
 			if ($rec['email_signup']) {
 				$tags[] = 'form-email';

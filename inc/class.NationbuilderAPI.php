@@ -33,6 +33,23 @@ class NationbuilderAPI {
 
 		return json_decode(curl_exec($handle),true);		 
 	}
+
+	public function delete($query, $params=NULL) {
+
+		$handle = curl_init();
+				
+		curl_setopt($handle, CURLOPT_URL, NB_BASE_API.$query."?access_token=".NB_ACCESS_TOKEN);
+		curl_setopt($handle, CURLOPT_CUSTOMREQUEST,'DELETE');
+		
+		// DELETE action may not take params
+		if (is_array($params))
+			curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($params));
+		
+		curl_setopt($handle, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Accept: application/json'));  
+		curl_setopt($handle, CURLOPT_RETURNTRANSFER,true);
+
+		return json_decode(curl_exec($handle),true);		 
+	}
 	
 	protected function oauth()
 	{				

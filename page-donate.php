@@ -8,7 +8,7 @@ require_once('inc/class.CreditCardSubmission.php');
 
 wp_enqueue_script(
 	'donate',
-	'/wp-content/themes/Largo-BP/js/donate.js',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/donate.js',
 	array('jquery'),
 	'0.1',
 	true
@@ -174,7 +174,7 @@ get_header();
 
 ?>
 
-<div id="content" role="main">
+<div id="content" class="col-md-10 col-md-offset-1" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();

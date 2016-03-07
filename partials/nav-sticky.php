@@ -14,9 +14,7 @@
 					<div class="nav-right">
 
 						<ul id="header-extras">
-							
-							
-							
+
 							<li id="sticky-nav-search">
 								<a href="#" class="toggle">
 									<i class="icon-search" title="<?php esc_attr_e('Search', 'largo'); ?>" role="button"></i>
@@ -49,7 +47,6 @@
 								}
 							} ?>
 						</ul>
-
 					</div>
 
 					<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -76,6 +73,17 @@
 						<?php } ?>
 					</div>
 					<div class="nav-shelf">
+
+
+						<div class="wrap-navbar-twitter">
+							<a href="<?php echo(esc_attr(of_get_option('twitter_link'))); ?>" class="twitter-follow-button" data-show-count="false">Follow @BanyanProject</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</div>
+						
+						<div class="wrap-navbar-facebook">
+							<div class="fb-like" data-href="<?php echo(esc_attr(of_get_option('facebook_link'))); ?>" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
+						</div>
+
+
 					<ul class="nav">
 						<li class="<?php echo (of_get_option('sticky_header_logo') == '' ? 'home-link' : 'home-logo' ) ?>">
 							<a href="<?php echo esc_url( home_url( '/' ) ); ?>">

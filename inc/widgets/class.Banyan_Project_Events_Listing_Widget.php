@@ -27,23 +27,23 @@ class Banyan_Project_Events_Listing_Widget extends WP_Widget {
 		select distinct 
 			p.*
 			, sd.meta_value as `start_date`
-			, st.meta_value as `start_time`
 			, ed.meta_value as `end_date`
-			, et.meta_value as `end_time`
 			, lt.meta_value as `location_title`
+			, a.meta_value as `address`
+			, c.meta_value as `city`
 		from wp_posts p 
 			join wp_postmeta sd on p.ID = sd.post_id
-			join wp_postmeta st on p.ID = st.post_id
+				and sd.meta_key = 'start_date'
 			join wp_postmeta ed on p.ID = ed.post_id
-			join wp_postmeta et on p.ID = et.post_id
+				and ed.meta_key = 'end_date' 
 			join wp_postmeta lt on p.ID = lt.post_id
+				and lt.meta_key = 'location_title'
+			left join wp_postmeta a on p.ID = a.post_id
+				and a.meta_key = 'address'
+			left join wp_postmeta c on p.ID = c.post_id
+				and c.meta_key = 'city'
 		where p.post_status = 'publish'
-			and sd.meta_key = 'start_date'
-			and st.meta_key = 'start_time'
-			and ed.meta_key = 'end_date' 
 			and ed.meta_value between now() and date_add(now(), interval 60 day)
-			and et.meta_key = 'end_time'
-			and lt.meta_key = 'location_title'
 		order by `start_date`
 		limit {$limit}
 		";
@@ -73,10 +73,10 @@ class Banyan_Project_Events_Listing_Widget extends WP_Widget {
         		
         			<div class="teaser-date-location clearfix">
         				<span class="upcoming-start-date"><?php echo(date("F j",strtotime($event->start_date))); ?></span>								
-						<?php if ($event->start_date != $event->end_date) : ?>
+						<?php if (date("Y-m-d",strtotime($event->start_date)) != date("Y-m-d",strtotime($event->end_date))) : ?>
 						- <span class="upcoming-end-date"><?php echo(date("F j",strtotime($event->end_date))); ?></span>,								
 						<?php else: ?>
-						<span class="upcoming-start-time"><?php echo(date("g:ia",strtotime($event->start_time))); ?></span>,
+						<span class="upcoming-start-time"><?php echo(date("g:ia",strtotime($event->start_date))); ?></span>,
 						<?php endif; ?>
         				
         				<span class="event-location"><?php echo($event->location_title); ?></span>       				

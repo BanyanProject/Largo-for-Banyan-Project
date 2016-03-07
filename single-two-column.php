@@ -35,12 +35,6 @@ get_header();
 
 			}
 
-			do_action('largo_before_comments');
-			
-			//comments_template( '', true );
-
-			do_action('largo_after_comments');
-
 		endwhile;
 	?>
 </div>

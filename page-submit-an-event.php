@@ -13,7 +13,7 @@ if (!defined('RECURRING_EVENT_ID'))
  
  wp_enqueue_script(
 	'contact',
-	'/wp-content/themes/Largo-BP/js/submit-an-event.js',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/submit-an-event.js',
 	array('jquery'),
 	'0.1',
 	true
@@ -40,6 +40,10 @@ class EventForm extends FormSubmission {
 	
 	public function transformInput() {
 		
+		$this->input['start_date'] .= ' ' . $this->input['start_time'];
+		$this->input['end_date'] .= ' ' . $this->input['end_time'];
+		
+	
 		foreach ($this->input as $f => $v) {
 			
 			switch ($f) {
@@ -48,6 +52,8 @@ class EventForm extends FormSubmission {
 				case 'submitted' :
 				case 'token' :
 				case 'submit' :
+				case 'start_time' :
+				case 'end_time' :
 					
 					break; 
 				
@@ -73,16 +79,6 @@ class EventForm extends FormSubmission {
 					}
 					break;
 				
-				// transform time values
-							
-				case 'start_time' :
-				case 'end_time' :
-					
-					if (!in_array($f,$this->errorFields)) {
-						$this->output['wp_postmeta'][$f] = date("h:i:s",strtotime($v));
-					}
-					
-					break;
 					
 				// all other form fields
 				default :
@@ -98,18 +94,12 @@ class EventForm extends FormSubmission {
 					break;
 			}
 		}
-
+		
 		// set end_date = start_date for single-day events (where end_date has been left blank)
-
+			
 		if ($this->outputValue('end_date') == NULL) 
 			$this->output['wp_postmeta']['end_date'] = $this->outputValue('start_date');
-		
-		if ($this->outputValue('start_time') == NULL)
-			$this->output['wp_postmeta']['start_time'] = '';
-
-		if ($this->outputValue('end_time') == NULL)
-			$this->output['wp_postmeta']['end_time'] = '';
-		
+				
 	}
 	
 	public function persist() {
@@ -252,8 +242,8 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$form->adminMsg()->setVariable('start_date',$form->outputValue('start_date'));
 		$form->adminMsg()->setVariable('start_time',$form->outputValue('start_time'));
-		$form->adminMsg()->setVariable('end_date',$form->outputValue('end_date'));
-		$form->adminMsg()->setVariable('end_time',$form->outputValue('end_time'));
+		//$form->adminMsg()->setVariable('end_date',$form->outputValue('end_date'));
+		//$form->adminMsg()->setVariable('end_time',$form->outputValue('end_time'));
 		
 		if ($form->outputValue('event_recurrence') == 'none') {
 			$form->adminMsg()->setVariable('event_recurrence','No');
@@ -300,8 +290,8 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$form->userMsg()->setVariable('start_date',$form->outputValue('start_date'));
 		$form->userMsg()->setVariable('start_time',$form->outputValue('start_time'));
-		$form->userMsg()->setVariable('end_date',$form->outputValue('end_date'));
-		$form->userMsg()->setVariable('end_time',$form->outputValue('end_time'));
+		//$form->userMsg()->setVariable('end_date',$form->outputValue('end_date'));
+		//$form->userMsg()->setVariable('end_time',$form->outputValue('end_time'));
 		
 		if ($form->outputValue('event_recurrence') == 'none') {
 			$form->userMsg()->setVariable('event_recurrence','No');
@@ -351,7 +341,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1"role="main">
+<div id="content" class="col-md-10 col-md-offset-1" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -450,7 +440,7 @@ get_header();
 									    </span>
 									</div>				
 								</div>
-	
+
 								<div class="col-sm-4" id="wrap-start-time">
 									<label for="start_time">Start Time:</label>
 									<div id="start-time" class="input-group date">
@@ -540,7 +530,7 @@ get_header();
 							<div class="form-group row clearfix">
 								<div class="col-sm-8">
 								    <label for="city">City: <span class="required" title="This field is required.">*</span></label>
-								    <input type="text" name="city" value="<?php echo esc_attr($_POST['city']); ?>">
+								    <input type="text" name="city" value="<?php echo(isset($_POST['city']) ? esc_attr($_POST['city']) : AFFILIATE_CITY); ?>">
 								</div>
 							</div>
 							

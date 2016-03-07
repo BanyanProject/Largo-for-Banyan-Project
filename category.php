@@ -5,7 +5,7 @@
  
 wp_enqueue_script(
 	'category',
-	'/wp-content/themes/Largo-BP/js/category.php',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/calendar.php?cid=' . get_queried_object_id(),
 	array('jquery'),
 	'0.1',
 	true

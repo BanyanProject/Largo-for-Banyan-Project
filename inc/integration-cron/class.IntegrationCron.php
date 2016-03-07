@@ -16,7 +16,8 @@ abstract class IntegrationCron {
 	protected $execution_time;
 	protected $memory_usage;
 
-	protected $dbtable = 'frm_integration_cron';
+	protected $dbtable;
+	protected $subtable = 'frm_integration_cron';
 	protected $fields = array('cron','timestamp','count','success','errors','log','execution_time','memory_usage');
 	
 	public function __construct() {
@@ -38,7 +39,18 @@ abstract class IntegrationCron {
 					
 	}
 
-	abstract protected function buildList();
+	protected function buildList()
+	{
+		$this->loadSubmissions();		
+	}
+	
+	protected function loadSubmissions()
+	{	
+		global $wpdb;
+		
+		$querystr = $wpdb->prepare("select t.*, s.* from {$this->dbtable} t join frm_submission s on t.id = s.id where s.submit_timestamp > %d and s.submit_timestamp <= %d and validate = 1", $this->start_timestamp, $this->end_timestamp);		
+		$this->list = $wpdb->get_results($querystr, OBJECT);
+	}	
 
 	abstract public function run();
 
@@ -62,13 +74,13 @@ abstract class IntegrationCron {
 		}
 
 		global $wpdb;
-		$wpdb->insert($this->dbtable,$data);
+		$wpdb->insert($this->subtable,$data);
 	}
 
 	protected function getLastCronTimestamp()
 	{
 		global $wpdb;		
-		$querystr = "select max(timestamp) from {$this->dbtable} where cron = %s";
+		$querystr = "select max(timestamp) from {$this->subtable} where cron = %s";
 		$res = $wpdb->get_var($wpdb->prepare($querystr,get_class($this)));
 		
 		if (!is_numeric($res))
@@ -105,8 +117,33 @@ abstract class IntegrationCron {
 			'email' => $rec['email']
 		);
 	
+		// non-standard fields
+	
 		if (defined('NB_PARENT_ID'))
 			$person['parent_id'] = NB_PARENT_ID;	
+
+		if (isset($rec['phone']))
+			$person['phone'] = $this->parsePhone($rec['phone']);
+
+		if (isset($rec['authorize_subscription_id']))
+			$person['authorize_subscription_id'] = $rec['authorize_subscription_id'];
+	
+		// address fields
+	
+		$address_fields = array(
+			'address' => 'address'
+			,'city' => 'city'
+			,'state_province' => 'state'
+			,'country' => 'country_code'
+			,'zip_postal' => 'zip'
+		);	
+
+		foreach ($address_fields as $f => $v) {
+			if (isset($rec[$f]) && !empty($rec[$f]))
+				$person['billing_address'][$v] = $rec[$f];
+		}
+	
+		// standard fields
 	
 		$fields = array('first_name','last_name');
 		
@@ -114,11 +151,96 @@ abstract class IntegrationCron {
 			if (isset($rec[$f]) && !empty($rec[$f]))
 				$person[$f] = $rec[$f];
 		}
-
-		return $person;		
 	}
 
+	protected function makeDonation($rec,$person,$note=NULL) {
+			
+		$donation = array(
+			'billing_address' => array(
+				'address1' => $rec['address']
+				,'city' => $rec['city']
+				,'country_code' => $rec['country']
+				,'zip' => $rec['zip_postal']
+			)
+			,'created_at' => date("c",$rec['submit_timestamp'])
+			,'donor_id' => $person['id']
+			,'email' => $rec['email']
+			,'payment_type_name' => 'Credit Card'			
+			,'succeeded_at' => date("c",$rec['submit_timestamp'])
+		);
+
+		if (isset($rec['total']))
+			$donation['amount_in_cents'] = round($rec['total'] * 100);
+		elseif (isset($rec['amount']))
+			$donation['amount_in_cents'] = round($rec['amount'] * 100);
+
+		if (isset($row['state_province']) && $rec['state_province'] != NULL)
+			$donation['billing_address']['state'] = $rec['state_province'];
+
+		if (isset($rec['authorize_subscription_id']) && $rec['authorize_subscription_id'] != NULL)
+			$donation['recurring_donation_id'] = $rec['authorize_subscription_id'];
+
+		if (!is_null($note))
+			$donation['note'] = $note;
+		
+		return $donation;
+	}
+
+	protected function tags($tags, $rec, $person) {
+
+		$id = $person['id'];
 	
+		foreach ($tags as $tag) {
+				
+			$tagging = array(
+				'tag' => $tag
+			);
+				
+			$res = $api->put("/api/v1/people/{$id}/taggings",array('tagging' => $tagging));
+				
+			if (isset($res['code']))
+			{
+				$this->errors++; 
+				$this->log .= $rec['email']."\tpeople/{$id}/taggings\terror ".$res['code']."\n";
+			} else {
+				$this->log .= $rec['email']."\tpeople/{$id}/taggings\tsuccess\n";
+			}
+		}
+		
+		return $res;
+	}
+
+	protected function emailNewsletterSignup($rec,$person) {
+
+		$id = $person['id'];
+
+		if ($rec['email_signup'])
+		{		
+			$res = $api->post("/api/v1/lists/". EMAIL_NEWSLETTER_LIST_ID . "/people", array('people_ids'=> array($id)));
+	
+			if (isset($res['code']))
+			{
+				$this->errors++; 
+				$this->log .= $rec['email']."\tlists/". EMAIL_NEWSLETTER_LIST_ID . "/people\terror ".$res['code']."\n";
+			} else {						
+				$this->log .= $rec['email']."\tlists/". EMAIL_NEWSLETTER_LIST_ID . "/people\tsuccess\n";
+			}
+		}
+
+		return $res;	
+	}
+
+	protected function parsePhone($phone) {
+		$phone = preg_replace("/[^0-9]/", "", $phone);
+ 
+		if(strlen($phone) == 7)
+			return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
+		elseif(strlen($phone) == 10)
+			return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
+		else
+			return $phone;
+	}
+
 }
 
 ?>

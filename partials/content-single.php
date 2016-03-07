@@ -127,48 +127,59 @@ $custom = get_post_custom( $post->ID );
 				<?php if ($type->slug == 'event') : ?>
 		
 				<p class="event-datetime">
-					
-					<?php if (bp_custom_field_valid($custom,'start_date')) : ?>
-					<span class="event-start-date"><?php echo(date("l, F j",strtotime($custom['start_date'][0]))); ?></span>
-					<?php endif; ?>
-					
-					<?php if (bp_custom_field_valid($custom,'end_date') && $custom['end_date'][0] != $custom['start_date'][0]) : ?>
-					- <span class="event-end-date"><?php echo(date("l, F j",strtotime($custom['end_date'][0]))); ?></span>
-					<?php endif; ?>
-					
-					<br>
 				
-				<?php if (bp_custom_field_valid($custom,'start_time')) : ?>
+				<!-- 
+					Start Date
+					if End Date Y-m-d != Start Date Y-m-d  
+						End Date 
+						break
+					Start Time 
+					if End Time g:i a != Start Time	G:i a 
+						End Time
+				-->
 					
-					<span class="event-start-time"><?php echo(date("g:i a",strtotime($custom['start_time'][0]))); ?></span>
+					<?php 
+						$include_time = true;
 					
-					<?php if (bp_custom_field_valid($custom,'end_time') && $custom['end_time'][0] != $custom['start_time'][0]) : ?>
-					- <span class="event-end-time"><?php echo(date("g:i a",strtotime($custom['end_time'][0]))); ?></span>
-					<?php endif; ?>	
-										
-				</p>	
-				
-				<?php endif; endif; ?>	
+						if (bp_custom_field_valid($custom,'start_date')) : ?>
+						
+							<span class="event-start-date"><?php echo(date("l, F j",strtotime($custom['start_date'][0]))); ?></span>
+						
+							<?php if (bp_custom_field_valid($custom,'end_date') && date("Y-m-d", strtotime($custom['end_date'][0])) != date("Y-m-d",strtotime($custom['start_date'][0]))) : ?>
+								- <span class="event-end-date"><?php echo(date("l, F j",strtotime($custom['end_date'][0]))); ?></span>
+							<?php endif; ?>
+
+							<span class="event-start-time"><?php echo(date("g:i a",strtotime($custom['start_date'][0]))); ?></span>
+					
+							<?php if (bp_custom_field_valid($custom,'end_date') && date("g:i a",strtotime($custom['end_date'][0])) != date("g:i a",strtotime($custom['start_date'][0]))) : ?>
+							- <span class="event-end-time"><?php echo(date("g:i a",strtotime($custom['end_date'][0]))); ?></span>
+							<?php endif; ?>
+								
+						<?php endif; ?>
+															
+					</p>	
+					
+				<?php endif; ?>	
 				
 				<p class="location">
-					
-					<?php if (bp_custom_field_valid($custom,'location_title')) : ?>
-					<span class="event-location-title"><?php echo($custom['location_title'][0]); ?></span><br>
-					<?php endif; ?>
-					
-					<?php if (bp_custom_field_valid($custom,'address')) : ?>
-					<span class="event-location-address"><?php echo($custom['address'][0]); ?></span><br>
-					<?php endif; ?>
-					
-					<?php if (bp_custom_field_valid($custom,'city')) : ?>
-					<span class="event-location-city"><?php echo($custom['city'][0]); ?></span>, 
-					<?php endif; ?>
-					
-					<?php if (bp_custom_field_valid($custom,'state_province')) : ?>
-					<span class="event-location-province"><?php echo($custom['state_province'][0]); ?></span>
-					<?php endif; ?>
-					
-				</p>
+						
+						<?php if (bp_custom_field_valid($custom,'location_title')) : ?>
+						<span class="event-location-title"><?php echo($custom['location_title'][0]); ?></span><br>
+						<?php endif; ?>
+						
+						<?php if (bp_custom_field_valid($custom,'address')) : ?>
+						<span class="event-location-address"><?php echo($custom['address'][0]); ?></span><br>
+						<?php endif; ?>
+						
+						<?php if (bp_custom_field_valid($custom,'city')) : ?>
+						<span class="event-location-city"><?php echo($custom['city'][0]); ?></span>, 
+						<?php endif; ?>
+						
+						<?php if (bp_custom_field_valid($custom,'state_province')) : ?>
+						<span class="event-location-province"><?php echo($custom['state_province'][0]); ?></span>
+						<?php endif; ?>
+						
+				</p>	
 							
 				<?php if ($type->slug == 'event' && (bp_custom_field_valid($custom, 'event_url') || bp_custom_field_valid($custom, 'event_email'))) : ?> 
 					
@@ -307,9 +318,18 @@ $custom = get_post_custom( $post->ID );
 
 <?php if (in_array($type->slug, array('news','blog','event'))) : ?>
 	
-<div id="comments-forum">
-	<h3><?php largo_top_term(array('post' => get_the_ID(),'echo' => true,'link' => false)); ?> Forum</h3>
-</div>
+	<div id="comments-forum">
+		<h3><?php largo_top_term(array('post' => get_the_ID(),'echo' => true,'link' => false)); ?> Forum</h3>
+	</div>
+	
+	<?php 
+	
+		//do_action('largo_before_comments');
+			
+		//comments_template( '', true );
+
+		//do_action('largo_after_comments');
+	?>
 
 <?php endif; ?>
 

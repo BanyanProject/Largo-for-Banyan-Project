@@ -1,8 +1,8 @@
 <?php
 
-class ContactCron extends IntegrationCron {
+class EmailNewsletterCron extends IntegrationCron {
 
-	protected $dbtable = 'frm_contact';
+	protected $dbtable = 'frm_email_newsletter';
 
 	public function run()
 	{	
@@ -41,24 +41,21 @@ class ContactCron extends IntegrationCron {
 				
 			$this->log .= $rec['email']."\tpeople/push\tsuccess\n";
 			$person = $res['person'];
+			$id = $res['person']['id'];
 			
 			unset($res);
 			
 			// Tags
+			
+			$tags = array('form-email');
 						
-			$tags = array('form-contact');
-						
-			if ($rec['email_signup']) {
-				$tags[] = 'form-email';
-				$this->emailNewsletterSignup($rec, $person);	
-			}
+			$this->emailNewsletterSignup($rec, $person);	
 		
 			$this->tags($tags, $rec, $person);
 		
 			unset($person, $tags);	
 		}
-	}
-	
+	}	
 }
 
 ?>

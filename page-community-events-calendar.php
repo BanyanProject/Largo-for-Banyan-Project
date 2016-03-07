@@ -5,7 +5,7 @@
     
 wp_enqueue_script(
 	'calendar',
-	'/wp-content/themes/Largo-BP/js/calendar.php',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/calendar.php',
 	array('jquery'),
 	'0.1',
 	true
@@ -19,25 +19,25 @@ $querystr = "
 select distinct 
 	p.*
 	, sd.meta_value as `start_date`
-	, st.meta_value as `start_time`
 	, ed.meta_value as `end_date`
-	, et.meta_value as `end_time`
 	, lt.meta_value as `location_title`
+	, a.meta_value as `address`
+	, c.meta_value as `city`
 from wp_posts p 
 	join wp_postmeta sd on p.ID = sd.post_id
-	join wp_postmeta st on p.ID = st.post_id
+		and sd.meta_key = 'start_date'
 	join wp_postmeta ed on p.ID = ed.post_id
-	join wp_postmeta et on p.ID = et.post_id
+		and ed.meta_key = 'end_date' 
 	join wp_postmeta lt on p.ID = lt.post_id
+		and lt.meta_key = 'location_title'
+	left join wp_postmeta a on p.ID = a.post_id
+		and a.meta_key = 'address'
+	left join wp_postmeta c on p.ID = c.post_id
+		and c.meta_key = 'city'
 where p.post_status = 'publish'
-	and sd.meta_key = 'start_date'
-	and st.meta_key = 'start_time'
-	and ed.meta_key = 'end_date' 
-	and ed.meta_value between now() and date_add(now(), interval 7 day)
-	and et.meta_key = 'end_time'
-	and lt.meta_key = 'location_title'
+	and ed.meta_value between now() and date_add(now(), interval 60 day)
 order by `start_date`
-limit 12
+limit 40
 ";
 
 $events = $wpdb->get_results($querystr, OBJECT);
@@ -64,97 +64,141 @@ get_header();
 				</header><!-- .entry-header -->
 			
 				<section class="entry-content">
-					<?php the_content(); ?>
-					
-					<h4>Upcoming Events</h4>
 
-					<div class="row wrap-upcoming-events">
-					<?php foreach ($events as $event) : ?>
+				<div class="container community-events-calendar">
 					
-						<div class="col-sm-6 col-md-4">
-							<a class="thumbnail clearfix" href="/event/<?php echo($event->ID); ?>">
-																
-								<h5><?php echo($event->post_title); ?></h5>
-								
-								<div class="teaser-dateline">
-									<span class="upcoming-start-date"><?php echo(date("F j",strtotime($event->start_date))); ?></span>								
-									<?php if ($event->start_date != $event->end_date) : ?>
-									- <span class="upcoming-end-date"><?php echo(date("F j",strtotime($event->end_date))); ?></span>								
-									<?php else: ?>
-									<span class="upcoming-start-time"><?php echo(date("g:ia",strtotime($event->start_time))); ?></span>
-									<?php if ($event->start_time != $event->end_time && $event->end_time != NULL) : ?>
-									- <span class="upcoming-end-time"><?php echo(date("g:ia",strtotime($event->end_time))); ?></span>
-									<?php endif; endif; ?>																		
-								</div>
-								
-								<div class="teaser-event-location">
-									<?php echo($event->location_title); ?>
-								</div>		
-								
-								<?php echo(get_the_post_thumbnail($event->ID,'thumbnail',array('class' => 'alignright'))); ?>
-								
-								<?php if ($event->post_excerpt) : ?>						
-								<p class="clearfix"><?php echo($event->post_excerpt); ?></p>
-								<?php endif; ?>
-								
-								<p class="teaser-postscript">Click for more information.</p>
-							</a>
+					<div class="row wrap-calendar-intro ">
+						<div class="col-md-8 col-md-offset-2">
+							<?php the_content(); ?>
 						</div>
-						
-					<?php endforeach; ?>
 					</div>
+
+					<div class="row wrap-tabs">
 						
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"><a href="#upcoming-events" aria-controls="upcoming-events" role="tab" data-toggle="tab">Events Listing</a></li>
+							<li role="presentation"><a href="#monthly-calendar" aria-controls="monthly-calendar" role="tab" data-toggle="tab">Monthly Calendar</a></li>
+						</ul>
 					
-					<div id="wrap-calendar">						
-					</div>
+					</div>	
 
-					<script type="text/template" id="clndr-template">
-							<div class="clndr-controls">
-								<div class="clndr-control-button">
-									<span class="clndr-previous-button">&lsaquo;</span>
-								</div>
-								<div class="month"><%= month %> <%= year %></div>
-								<div class="clndr-control-button">
-									<span class="clndr-next-button">&rsaquo;</span>
-								</div>
-							</div>
-							<div class="clndr-grid">
-								<div class="days-of-the-week">
-								<% _.each(daysOfTheWeek, function(day) { %>
-										<div class="header-day"><%= day %></div>									
-								<% }); %>
-								</div>
-
-									<% for(var i = 0; i < numberOfRows; i++){ %>
-										<div class="week">											
-											<% for(var j = 0; j < 7; j++){ var d = j + i * 7; %>						
-												<div class="<%= days[d].classes %>">
-													<span class="day-number clearfix"><%= days[d].day %></span>
-													
-													<% _.each(days[d].events, function(event) { %>
-													<div class="wrap-clndr-event">	
-														<a class="clndr-event" href="<%= event.url %>">
-															<span class="clndr-start-time"><%= event.startTime %></span>
-															<% if (event.endTime != '' && event.endTime != event.startTime && event.date == event.endDate) { %>
-																- <span class="clndr-end-time"><%= event.endTime %></span>	
-															<% } %> 
-															<span class="clndr-title"></span><%= event.title %></span>
-														</a>
-	
-														<% if (event.date != event.endDate) { %>
-														<span class="clndr-multiday">This event runs until <%= formatMMd(event.endDate) %></span>
-														<% } %>
-													</div>													
-													<% }); %>													
-												</div>
-											<% } %>										
+					<div class="row tab-content">
+						<div role="tabpanel" class="tab-pane active" id="upcoming-events">
+							<div class="col-md-8 col-md-offset-2 wrap-upcoming-events">	
+								
+								<?php 
+									$d = null;
+								
+									foreach ($events as $event) : 
+										if ($d != date('l F j, Y',strtotime($event->start_date))) {
+											$d = date('l F j, Y',strtotime($event->start_date));
+											echo('<h4 class="event-date">'. $d .'</h4>');
+										}
+								?>
+									
+									<div class="wrap-event row">
+											
+											
+										<div class="col-xs-3">
+											<div class="teaser-dateline">
+												<span class="upcoming-start-time"><?php echo(date("g:ia",strtotime($event->start_date))); ?></span>
+												<?php if ($event->start_date != $event->end_date && $event->end_date != NULL) : ?>
+												- <span class="upcoming-end-time"><?php echo(date("g:ia",strtotime($event->end_date))); ?></span>
+												<?php endif; ?>																		
+											</div>
 										</div>
-									<% } %>
-
-							</div>
-					</script>
-
+											
+										<div class="col-xs-9" >
+											<h5 class="upcoming-title"><a href="/event/<?php echo($event->ID); ?>" data-toggle="tooltip" data-placement="right" title="<?php echo($event->post_excerpt); ?>"><?php echo($event->post_title); ?></a></h5>
+											
+											<div class="teaser-event-location">
+												<?php 
+													echo($event->location_title);
+													if (isset($event->address)) echo(", ". $event->address);
+													if (isset($event->city)) echo(", ". $event->city);
+												?>
+											
+											</div>	
+											
+											<div class="wrap-sharetools-horizontal-small hidden-xs hidden-sm">
+									
+												<span class="sharetool sharetool-facebook">
+													<div class="icon"></div>
+												</span>
+									
+												<span class="sharetool sharetool-twitter">
+													<div class="icon"></div>
+												</span>
+																		
+												<span class="sharetool sharetool-googleplus">
+													<div class="icon"></div>
+												</span>
+												
+											</div>
+												
+										</div>
+	
+									</div>
 										
+																
+								<?php endforeach; ?>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="monthly-calendar">
+							<div class="wrap-monthly-calendar">
+								<div id="wrap-calendar">						
+								</div>
+			
+								<script type="text/template" id="clndr-template">
+									<div class="clndr-controls">
+										<div class="clndr-control-button">
+											<span class="clndr-previous-button">&lsaquo;</span>
+										</div>
+										<div class="month"><%= month %> <%= year %></div>
+										<div class="clndr-control-button">
+											<span class="clndr-next-button">&rsaquo;</span>
+										</div>
+									</div>
+									<div class="clndr-grid">
+										<div class="days-of-the-week">
+										<% _.each(daysOfTheWeek, function(day) { %>
+												<div class="header-day"><%= day %></div>									
+										<% }); %>
+										</div>
+		
+											<% for(var i = 0; i < numberOfRows; i++){ %>
+												<div class="week">											
+													<% for(var j = 0; j < 7; j++){ var d = j + i * 7; %>						
+														<div class="<%= days[d].classes %>">
+															<span class="day-number clearfix"><%= days[d].day %></span>
+															
+															<% _.each(days[d].events, function(event) { %>
+															<div class="wrap-clndr-event">	
+																<a class="clndr-event" href="<%= event.url %>" data-toggle="tooltip" data-placement="right" title="<%= event.excerpt %>">
+																	<span class="clndr-start-time"><%= event.startTime %></span>
+																	<% if (event.endTime != '' && event.endTime != event.startTime && event.date == event.endDate) { %>
+																		- <span class="clndr-end-time"><%= event.endTime %></span>	
+																	<% } %> 
+																	<span class="clndr-title"></span><%= event.title %></span>
+																</a>
+			
+																<% if (event.date != event.endDate) { %>
+																<span class="clndr-multiday">This event runs until <%= formatMMd(event.endDate) %></span>
+																<% } %>
+															</div>													
+															<% }); %>													
+														</div>
+													<% } %>										
+												</div>
+											<% } %>
+		
+									</div>
+								</script>
+							</div>				
+						</div>
+					</div>
+				</div>
+														
 				</section><!-- .entry-content -->
 			</article><!-- #post-<?php the_ID(); ?> -->
 		

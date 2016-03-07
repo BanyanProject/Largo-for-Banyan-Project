@@ -28,8 +28,8 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
 		
 		?>
 		
-        <div id="wrap-calendar-widget" class="clearfix">
-          <script type="text/template" id="clndr-widget-template">
+        <div id="wrap-calendar" class="calendar-sidebar-widget clearfix">
+          <script type="text/template" id="clndr-template">
           	
             <div class="clndr-controls">
 			  <div class="clndr-control-button">
@@ -65,7 +65,7 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
               <h4 class="event-listing-title">Events This Month</h4>
               
               <% if (eventsThisMonth.length == 0) { %>
-                <p><small>There are no event listings this month.</small></p>
+                <p><small>There are no event listings for <%= month %>.</small></p>
               <% } %>
               
               <% _.each(eventsThisMonth, function(event) { %>

@@ -1,15 +1,12 @@
 
-	<div class="global-nav-wrapper-banyan">
-		<div class="global-nav-holder-banyan">
-			<div class="global-nav-container">
+			<div class="wrap-global-nav visible-md visible-lg">
+
 				<nav id="global-nav" class="navbar clearfix">
 	
 					<span class="visuallyhidden">
 						<a href="#main" title="<?php esc_attr_e( 'Skip to content', 'largo' ); ?>"><?php _e( 'Skip to content', 'largo' ); ?></a>
 					</span>
-					
-					<span class="menu-text menu-text-left-border"><?php echo(date("l F j, Y")); ?></span>
-									
+														
 					<?php
 						$top_args = array(
 							'theme_location' => 'global-nav',
@@ -19,6 +16,8 @@
 						largo_nav_menu($top_args);
 					?>
 					
+					
+					<!--
 					<div class="nav-right">
 						
 						<div class="wrap-navbar-twitter">
@@ -30,9 +29,7 @@
 						</div>
 						
 					</div>
+					-->
 					
 				</nav>
-			</div> <!-- /.global-nav-container -->
-			
-		</div>	
-	</div> <!-- /.global-nav-wrapper -->
+			</div>

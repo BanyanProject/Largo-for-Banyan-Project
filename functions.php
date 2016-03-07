@@ -6,6 +6,9 @@
 
 /* Includes */
 
+$path = ABSPATH . '/wp-content/themes/Largo-for-Banyan-Project/inc';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
 
 if (!class_exists('Banyan_Project_Calendar_Widget'))
 	require_once('inc/widgets/class.Banyan_Project_Calendar_Widget.php');
@@ -30,6 +33,7 @@ if (!class_exists('Banyan_Project_Recent_Blog_Posts_Widget'))
 
 
 require_once('inc/database.php');
+require_once('inc/curated-comments.php');
 
 /* Required Variables */
 
