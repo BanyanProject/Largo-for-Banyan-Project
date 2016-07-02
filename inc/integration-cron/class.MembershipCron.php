@@ -30,7 +30,7 @@ class MembershipCron extends IntegrationCron {
 			// Step 1: Find/Update Person Record
 			
 			$person = $this->makePerson($rec);
-			$res = $api->put('/api/v1/people/push',array('person' => $person));
+			$res = $nbapi->put('/api/v1/people/push',array('person' => $person));
 			
 			if (isset($res['code']))
 			{
@@ -47,7 +47,7 @@ class MembershipCron extends IntegrationCron {
 
 			// Step 2: Check for a Membership Record
 			$membership = NULL;
-			$memberships = $api->get("/api/v1/people/{$id}/memberships");
+			$memberships = $nbapi->get("/api/v1/people/{$id}/memberships");
 
 			foreach ($memberships['result']['results'] as $m) {
 				
@@ -76,7 +76,7 @@ class MembershipCron extends IntegrationCron {
 				if ($rec['recurring'] == 'non-recurring')				
 					$new['expires_on'] = $one_year;
 				
-				$res = $api->post("/api/v1/people/{$id}/memberships",array("membership" => $new));
+				$res = $nbapi->post("/api/v1/people/{$id}/memberships",array("membership" => $new));
 
 				if (isset($res['code']))
 				{
@@ -116,7 +116,7 @@ class MembershipCron extends IntegrationCron {
 						$update['expires_on'] = NULL;
 				}			
 
-				$res = $api->put("/api/v1/people/{$id}/memberships",array("membership" => $update));
+				$res = $nbapi->put("/api/v1/people/{$id}/memberships",array("membership" => $update));
 
 				if (isset($res['code']))
 				{
@@ -136,7 +136,7 @@ class MembershipCron extends IntegrationCron {
 			
 			$note = "For ". $membership['name'] ." Membership created at ". $membership['started_at'];
 			$donation = $this->makeDonation($rec,$person, $note);
-			$res = $api->post('/api/v1/donations', array('donation' => $donation));
+			$res = $nbapi->post('/api/v1/donations', array('donation' => $donation));
 		
 			if (isset($res['code']))
 			{

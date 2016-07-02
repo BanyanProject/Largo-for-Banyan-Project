@@ -15,7 +15,7 @@ class Banyan_Project_Email_Signup_Widget extends WP_Widget {
 			)
 		);
 		
-		$this->default_description = "Sign-up to receive weekly email updates from " . AFFILIATE_NAME . ".";
+		$this->default_description = "Sign-up to receive weekly email updates from " . get_bloginfo('name') . ".";
 	}
 	
 	public function widget( $args, $instance ) {

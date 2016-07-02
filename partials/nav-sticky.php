@@ -32,12 +32,12 @@
 
 							<?php if (!is_user_logged_in()) : ?>
 								<li>
-									<a href="/login">Login</a>
+									<a href="/login">Log In</a>
 								</li>						
 							<?php endif; ?>
 
 							<?php
-							if ( of_get_option( 'show_donate_button') ) {
+							if ( !is_member() && of_get_option( 'show_donate_button') ) {
 								if ($donate_link = of_get_option('donate_link')) { ?>
 								<li class="donate">
 									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">
@@ -74,15 +74,13 @@
 					</div>
 					<div class="nav-shelf">
 
-
 						<div class="wrap-navbar-twitter">
-							<a href="<?php echo(esc_attr(of_get_option('twitter_link'))); ?>" class="twitter-follow-button" data-show-count="false">Follow @BanyanProject</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+							<a href="<?php echo(esc_attr(of_get_option('twitter_link'))); ?>" class="twitter-follow-button" data-show-count="false">Follow <?php echo(bp_get_twitter_username('@')); ?></a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 						</div>
 						
 						<div class="wrap-navbar-facebook">
 							<div class="fb-like" data-href="<?php echo(esc_attr(of_get_option('facebook_link'))); ?>" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
 						</div>
-
 
 					<ul class="nav">
 						<li class="<?php echo (of_get_option('sticky_header_logo') == '' ? 'home-link' : 'home-logo' ) ?>">
@@ -104,7 +102,7 @@
 							);
 							largo_nav_menu($args);
 
-							if ( of_get_option( 'show_donate_button') ) {
+							if ( !is_member() && of_get_option( 'show_donate_button') ) {
 								if ($donate_link = of_get_option('donate_link')) { ?>
 								<li class="donate">
 									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">

@@ -28,6 +28,19 @@
 <div class="footer-bg clearfix nocontent">
 	<footer id="site-footer">
 
+		<?php if (bp_adgroup_has_ads(3)) : ?>
+		
+		
+		<div class="ad-outerwrap-footer">		
+			<h3 class="widgettitle">Our Sponsors</h3>
+			<div class="ad-innerwrap-footer">
+				<?php echo adrotate_group(3); ?>
+			</div>
+		</div>
+
+		<?php endif; ?>
+
+
 		<?php
 		    /**
 		     * Fires before the Largo footer widgets appear.
@@ -40,13 +53,6 @@
 		
 		?>
 		
-		<div class="ad-outerwrap-footer">
-			<div class="ad-innerwrap-footer">
-				<?php echo adrotate_group(3); ?>
-			</div>
-		</div>
-
-
 		<?php
 		    /**
 		     * Fires before the Largo footer boilerplate content.

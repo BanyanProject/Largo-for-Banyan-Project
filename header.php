@@ -71,13 +71,6 @@
 	<div class="homepage-header-wrapper">
 		<div class="homepage-header-container">
 		
-			<div class="ad-outerwrap ad-outerwrap-leaderboard ">
-				<div class="ad-innerwrap ad-innerwrap-leaderboard">
-					<div>Advertisement</div>
-					<?php echo adrotate_group(1); ?>
-				</div>			
-			</div>
-
 		<?php
 			if (SHOW_GLOBAL_NAV === TRUE ) {
 	
@@ -107,8 +100,6 @@
 
 
 	<div id="page" class="hfeed clearfix">
-
-
 
 		<?php get_template_part('partials/header-ad-zone'); ?>
 

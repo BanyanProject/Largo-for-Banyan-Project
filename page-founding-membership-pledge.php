@@ -59,11 +59,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid()) {
 		
 		$form->adminMsg('affiliate-admin-founding-membership-pledge');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
+		$form->adminMsg()->setTo(of_get_option('ed_name'), of_get_option('ed_email'));
+		$form->adminMsg()->setTo(of_get_option('admin_name'), of_get_option('admin_email'));
 		$form->adminMsg()->setSubject('New Founding Membership Pledge');
 	
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);	
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));	
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('address',$form->outputValue('address'));
 		$form->adminMsg()->setVariable('city',$form->outputValue('city'));		
@@ -77,12 +78,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->send();	
 
 		$form->userMsg('affiliate-user-founding-membership-pledge');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("Thank you for becoming a founding member!");
 		
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
-		$form->userMsg()->setVariable('affiliate_city',AFFILIATE_CITY);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
+		$form->userMsg()->setVariable('affiliate_city', of_get_option('location_col'));
 		$form->userMsg()->setVariable('volunteer_url','https://' . $_SERVER['SERVER_NAME'] . '/volunteer');
 		
 		$form->userMsg()->send();	
@@ -92,12 +93,17 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 
 	$form->persist();
 	
-	if (!$form->isValid())
-		$response = $form->formatErrorMsgHtml();
-		
+	// redirect or display errors
+			
 	if ($form->isValid()) {
-		header("Location: ". home_url("/founding-membership-pledge/thank-you"));
+
+		if (!is_user_logged_in() && !get_user_by_email($form->outputValue('email')))
+			header("Location: ". home_url("/register/?redirect=founding-membership"));
+		else
+			header("Location: ". home_url("/membership/thank-you"));
+
 		exit;
+		
 	} else
 		$response = $form->formatErrorMsgHtml();
 }
@@ -114,7 +120,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -532,14 +538,14 @@ get_header();
 						<fieldset>
 							<div class="checkbox">
 								<label for="email_signup">
-									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php echo(AFFILIATE_NAME); ?>.
+									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php bloginfo('name'); ?>.
 								</label>	
 							</div>
 						</fieldset>
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

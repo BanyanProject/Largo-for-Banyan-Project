@@ -5,6 +5,8 @@
  
 $type = bp_get_post_type($post->ID);
 $custom = get_post_custom( $post->ID );
+$top_term_id =  get_post_meta( get_the_ID(), 'top_term', TRUE );
+$top_term = largo_top_term(array('post' => get_the_ID(),'echo' => false,'link' => false)); 
   
 ?>
 
@@ -43,79 +45,12 @@ $custom = get_post_custom( $post->ID );
 
 	<div class="wrap-sm-content">
 		<div class="row">
+			
+			<?php if (!in_array(get_the_title(),array('Log In', 'Register', 'Lost Password')) && !stristr(get_the_title(),'Thank You')) : ?>
 			<div class="col-md-sm">
-				
-				<div class="wrap-sharetools-vertical hidden-xs hidden-sm">
-					<ul class="sharetools-list">
-						
-						<li class="sharetool sharetool-facebook-like">
-							<div class="wrap-facebook-like">
-								 <div class="fb-like" 
-							        data-href="<?php the_permalink(); ?>" 
-							        data-layout="button_count" 
-							        data-action="like" 
-							        data-show-faces="false">
-	    						</div>
-							</div>
-						</li>
-						
-						
-						<li class="sharetool sharetool-facebook">
-							<span class="wrap-shareicon st-sharethis st_facebook_custom" >
-								<div class="icon">
-									<span class="sharetool-text">Share</span>
-								</div>											
-							</span>
-						</li>					
-	
-						<li class="sharetool sharetool-twitter">
-							<span class="wrap-shareicon st-sharethis st_twitter_custom" st_via="<?php echo(AFFILIATE_TWITTER); ?>" >
-								<div class="icon">
-									<span class="sharetool-text">Tweet</span>
-								</div>											
-							</span>
-						</li>
-										
-						<?php if (has_post_thumbnail()) : ?>				
-										
-						<li class="sharetool sharetool-pinterest">
-							<span class="wrap-shareicon st-sharethis st_pinterest_custom" >
-								<div class="icon">
-									<span class="sharetool-text">Pin</span>
-								</div>											
-							</span>
-						</li>
-						
-						<?php endif; ?>
-	 
-	 					<li class="sharetool sharetool-email">
-							<a href="mailto:?subject=<?php the_title(); ?>&amp;body=<?php the_permalink(); ?>">
-								<div class="icon">
-									<span class="sharetool-text">Email</span>
-								</div>
-							</a>
-						</li>
-										
-						<li class="sharetool sharetool-googleplus">
-							<span class="wrap-shareicon st-sharethis st_googleplus_custom">
-								<div class="icon">
-									<span class="sharetool-text">Google+</span>
-								</div>											
-							</span>
-						</li>
-						
-						<li class="sharetool sharetool-linkedin">
-							<span class="wrap-shareicon st-sharethis st_linkedin_custom">
-								<div class="icon">
-									<span class="sharetool-text">LinkedIn</span>
-								</div>											
-							</a>
-						</li>
-						
-					</ul>
-					
-				</div>			
+				<?php get_template_part( 'partials/social', 'vertical' ); ?>				
 			</div>
+			<?php endif; ?>
 			
 			<div class="col-md-content">
 				
@@ -127,17 +62,7 @@ $custom = get_post_custom( $post->ID );
 				<?php if ($type->slug == 'event') : ?>
 		
 				<p class="event-datetime">
-				
-				<!-- 
-					Start Date
-					if End Date Y-m-d != Start Date Y-m-d  
-						End Date 
-						break
-					Start Time 
-					if End Time g:i a != Start Time	G:i a 
-						End Time
-				-->
-					
+									
 					<?php 
 						$include_time = true;
 					
@@ -255,8 +180,7 @@ $custom = get_post_custom( $post->ID );
 <div id="feedback-form">
 	<h3><a href="#" data-toggle="modal" data-target="#article-feedback-window">Tell us what you think about this article.</a></h3>
 	<p>
-		<?php echo(AFFILIATE_NAME); ?> strives to create content that is relevant to your life, respectful of your values, and worthy of your trust.
-		How did we do? 
+		Springfield Matters strives to create content that is relevant to your life, respectful of your values, and worthy of your trust. How did we do? The editor wants to know. Please speak up!
 	</p>
 	
 	<!-- Button trigger modal -->
@@ -276,8 +200,10 @@ $custom = get_post_custom( $post->ID );
 			        <h4 class="modal-title" id="article-feedback-label">Tell us what you think about this article.</h4>
 			    </div>
 			    
+			    <?php if (is_user_logged_in()) : ?>
+			    
 			    <div class="modal-body">
-			    	<form id="article-feedback">
+			    	<form id="article-feedback-form">
 			    		
 			    		<div class="form-group">
 			    			Was this article relevant and respectful?
@@ -285,12 +211,12 @@ $custom = get_post_custom( $post->ID );
 							  <input type="radio" name="relevant_respectful" id="rr-yes" value="1"> Yes
 							</label>
 							<label class="radio-inline">
-							  <input type="radio" name="relevant_respectful" id="rr-no" value="0"> No
+							  <input type="radio" name="relevant_respectful" id="rr-no" value="-1"> No
 							</label>
 						</div>
 						
 						<div class="form-group">
-							<p>Please tell us why or why not. Or suggest related topics for <?php echo(AFFILIATE_NAME); ?> to cover.</p>
+							<p>Please tell us why or why not. Or suggest related topics for <?php bloginfo('name'); ?> to cover.</p>
 							<textarea class="form-control" rows="4" name="feedback"></textarea>
 						</div>
 						
@@ -301,13 +227,27 @@ $custom = get_post_custom( $post->ID );
 							</select>
 						</div>
 						
+						<input type="hidden" name="post_id" value="<?php the_ID(); ?>">
+						<input type="hidden" name="term_id" value="<?php echo(get_post_meta( get_the_ID(), 'top_term', TRUE )); ?>" >
+						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
+						<input type="hidden" name="submitted" value="1">
 					</form>
 			    </div>
 			    
-			    <div class="modal-footer">
+			    <div class="modal-footer" id="wrap-feedback-submit">
 			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			        <button type="button" class="btn btn-primary">Send My Feedback</button>
+			        <button type="button" class="btn btn-primary" id="feedback-submit">Send My Feedback</button>
 			    </div>
+			    
+			    <?php else : ?>
+			    	
+				<div class="modal-body">
+					<p>You must have a user account and login to send feedback on articles.</p>
+					<p>You may <a href="/login/">login here</a>. You may <a href="/register/">create a user account here</a>.</p>
+				</div>
+			    
+			    <?php endif; ?>
+			    
 		    </div>
 		</div>
 	</div>
@@ -317,18 +257,47 @@ $custom = get_post_custom( $post->ID );
 <?php endif; ?>
 
 <?php if (in_array($type->slug, array('news','blog','event'))) : ?>
-	
+
+
 	<div id="comments-forum">
-		<h3><?php largo_top_term(array('post' => get_the_ID(),'echo' => true,'link' => false)); ?> Forum</h3>
+		<h3>And Join the Conversation!</h3>
+
+		<p>See what others are saying about <?php echo(strtolower($top_term)); ?> below - and if this article and the comments inspire you to add your voice, please do so now. It’s easy.</p>
+
+		<p>
+			This is the <?php echo($top_term); ?> Forum.
+			
+			<?php $categories = get_the_category();
+				if (count($categories) > 1) :	?>
+			 
+			 	You may also participate in orther forums relating to this article, including the 
+			
+				<?php
+				
+				$separator = ', ';
+				$output = '';
+
+				if ( ! empty( $categories ) ) {
+					
+				    foreach( $categories as $category ) {
+				    	if ($top_term_id != $category->term_id) 
+				       		$output .= '<a href="' . esc_url( get_category_link( $category->term_id ) ) . '" alt="' . esc_attr( sprintf( __( 'View all posts in %s', 'textdomain' ), $category->name ) ) . '">' . esc_html( $category->name ) . ' Forum</a>' . $separator;
+				    }
+				    echo trim( $output, $separator );
+				}
+				echo('.');
+			?>
+			<?php endif; ?>	
+		</p>
 	</div>
 	
 	<?php 
 	
-		//do_action('largo_before_comments');
+		do_action('largo_before_comments');
 			
-		//comments_template( '', true );
+		bp_comments_template( $top_term_id, '', true );
 
-		//do_action('largo_after_comments');
+		do_action('largo_after_comments');
 	?>
 
 <?php endif; ?>

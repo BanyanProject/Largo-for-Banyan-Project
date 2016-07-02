@@ -77,11 +77,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		}
 		
 		$form->adminMsg('affiliate-admin-volunteer');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
+		$form->adminMsg()->setTo(of_get_option('ed_name'), of_get_option('ed_email'));
+		$form->adminMsg()->setTo(of_get_option('editor_name'), of_get_option('editor_email'));
 		$form->adminMsg()->setSubject('Volunteer Notification');
 	
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);	
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));	
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('address',$form->outputValue('address'));
 		$form->adminMsg()->setVariable('city',$form->outputValue('city'));		
@@ -100,12 +101,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->send();	
 
 		$form->userMsg('affiliate-user-volunteer');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("Thank you for volunteering!");
 
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
-		$form->userMsg()->setVariable('affiliate_city',AFFILIATE_NAME);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
+		$form->userMsg()->setVariable('affiliate_city', of_get_option('location_col'));
 		$form->userMsg()->setVariable('skills',implode(", ",$skills));
 		$form->userMsg()->setVariable('interests',implode(", ",$interests));
 		
@@ -118,12 +119,17 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 
 	$form->persist();
 	
-	if (!$form->isValid())
-		$response = $form->formatErrorMsgHtml();
-		
+	// redirect or display error messages
+			
 	if ($form->isValid()) {
-		header("Location: ". home_url("/volunteer/thank-you"));
+		
+		if (!is_user_logged_in() && !get_user_by_email($form->outputValue('email')))
+			header("Location: ". home_url("/register/?redirect=volunteer"));
+		else
+			header("Location: ". home_url("/volunteer/thank-you"));
+		
 		exit;
+
 	} else
 		$response = $form->formatErrorMsgHtml();
 }
@@ -140,7 +146,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -608,21 +614,21 @@ get_header();
 							<div class="checkbox">
 								<label for="interests_write">
 									<input type="checkbox" name="interests_write" value="1" <?php if (esc_attr($_POST['interests_write']) == 1) echo('checked'); ?> >
-									I am interested in reporting or editing for <?php echo(AFFILIATE_NAME); ?>.
+									I am interested in reporting or editing for <?php bloginfo('name'); ?>.
 								</label>
 							</div>
 
 							<div class="checkbox">
 								<label for="interests_volunteer">
 									<input type="checkbox" name="interests_volunteer" value="1" <?php if (esc_attr($_POST['interests_volunteer']) == 1) echo('checked'); ?> >
-									I am interested in volunteering for <?php echo(AFFILIATE_NAME); ?> in a non-writing capacity. 
+									I am interested in volunteering for <?php bloginfo('name'); ?> in a non-writing capacity. 
 								</label>
 							</div>
 
 							<div class="checkbox">
 								<label for="interests_event">
 									<input type="checkbox" name="interests_event" value="1" <?php if (esc_attr($_POST['interests_event']) == 1) echo('checked'); ?> >
-									I am interested in hosting a house party or event for <?php echo(AFFILIATE_NAME); ?>.
+									I am interested in hosting a house party or event for <?php bloginfo('name'); ?>.
 								</label>
 							</div>
 							
@@ -634,7 +640,7 @@ get_header();
 							
 							<div class="form-group row clearfix">
 								<div class="col-sm-8">
-								    <label for="message">How would you like to help <?php echo(AFFILIATE_NAME); ?>? We encourage creativity and specificity.</label>
+								    <label for="message">How would you like to help <?php bloginfo('name'); ?>? We encourage creativity and specificity.</label>
 								    <textarea type="text" name="message" rows="6"><?php echo esc_textarea($_POST['message']); ?></textarea>
 								</div>
 							</div>
@@ -645,14 +651,14 @@ get_header();
 							<div class="checkbox">
 								<label for="email_signup">
 									<input type="checkbox" name="email_signup" value="1" checked> 
-									Sign-up to receive weekly email updates from <?php echo(AFFILIATE_NAME); ?>.
+									Sign-up to receive weekly email updates from <?php bloginfo('name'); ?>.
 								</label>	
 							</div>
 						</fieldset>
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

@@ -49,26 +49,29 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid()) {
 		
 		$form->adminMsg('affiliate-admin-contact');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setReplyTo($form->outputValue('name'), $form->outputValue('email'));
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
 		
 		switch ($form->outputValue('type')) {
 			
 			case 'advertising' :
 				$form->adminMsg()->setSubject('Advertising Inquiry');
+				$form->adminMsg()->setTo(of_get_option('ed_name'),of_get_option('ed_email'));
+				$form->adminMsg()->setTo(of_get_option('admin_name'),of_get_option('admin_email'));
 				break;
 				
 			case 'news-topic' :
 				$form->adminMsg()->setSubject('News Coverage Request');
+				$form->adminMsg()->setTo(of_get_option('editor_name'),of_get_option('editor_email'));
 				break;
 				
 			case 'contact-editor' :
 				$form->adminMsg()->setSubject('Private Note to the Editor');
+				$form->adminMsg()->setTo(of_get_option('editor_name'),of_get_option('editor_email'));
 				break;
 		}
 		
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->adminMsg()->setVariable('affiliate_name',get_bloginfo('name'));
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('sender_email',$form->outputValue('email'));		
 		$form->adminMsg()->setVariable('permalink',get_permalink());
@@ -76,14 +79,14 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->send();
 		
 		$form->userMsg('affiliate-user-contact');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option());
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 
 		switch ($form->outputValue('type')) {
 			
 			case 'advertising' :
 				$form->userMsg()->setSubject("Thanks! We've received your advertising inquiry.");
-				$form->userMsg()->setVariable('message_type','advertising inquiry.');
+				$form->userMsg()->setVariable('message_type','advertising inquiry');
 				break;
 				
 			case 'news-topic' :
@@ -97,7 +100,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 				break;
 		}
 		
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->userMsg()->setVariable('affiliate_name',get_bloginfo('name'));
 		$form->userMsg()->setContentMain($form->outputValue('message'));
 		$form->userMsg()->send();
 		
@@ -125,7 +128,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -186,13 +189,13 @@ get_header();
 	
 						<div class="checkbox">
 							<label for="email_signup">
-								<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php echo(AFFILIATE_NAME); ?>.
+								<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php  bloginfo('name');  ?>.
 							</label>	
 						</div>
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

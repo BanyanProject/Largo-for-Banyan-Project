@@ -6,7 +6,7 @@ class HomepageThreeColumn extends Homepage {
 	function __construct($options=array()) {
 		$defaults = array(
 			'name' => __('Three-column Layout', 'largo'),
-			'description' => __('A three column homepage layout, featuring news article in the left-hand column and events in the middle column.', 'Largo-BP'),
+			'description' => __('A three column homepage layout, featuring news articles in the left-hand column and events in the middle column.', 'Largo-BP'),
 			'template' => get_stylesheet_directory() . '/homepages/templates/homepage-three-column.php',
 			'prominenceTerms' 	=> array(
 				array(
@@ -17,14 +17,7 @@ class HomepageThreeColumn extends Homepage {
 			),
 			'sidebars' => array(
 				__( 'Homepage Middle Column', 'largo' )
-			),
-			'assets' => array(
-				array(
-					'homepage-three-column',
-					get_stylesheet_directory_uri() . '/homepages/assets/js/homepage-three-column.js',
-					array('jquery')
-				)
-			),
+			)
 		);
 		$options = array_merge($defaults, $options);
 		parent::__construct($options);

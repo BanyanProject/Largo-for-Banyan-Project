@@ -1,6 +1,6 @@
 <?php
 
-require_once('class.NameParser.php');
+require_once('../class.NameParser.php');
 
 abstract class IntegrationCron {
 

@@ -55,9 +55,8 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$form->validate('amount','required');
 		$form->validate('amount','float');
-		$form->validate('amount','lessThan',array('max' => 5000),'Please contact '.AFFILIATE_NAME.' directly to make a donation of more than $5,000.');	
+		$form->validate('amount','lessThan',array('max' => 5000),'Please contact '. get_bloginfo('name') .' directly to make a donation of more than $5,000.');	
 		$form->validate('cc','required');
-		$form->validate('cc','visaMasterCardAmExDiscover');
 		$form->validate('exp_month','required');
 		$form->validate('exp_month','allowedValues',array('01','02','03','04','05','06','07','08','09','10','11','12'));
 		$form->validate('exp_year','required');
@@ -74,11 +73,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid() && $form->isApproved()) {
 		
 		$form->adminMsg('affiliate-admin-donate');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
+		$form->adminMsg()->setTo(of_get_option('ed_name'),of_get_option('ed_email'));
+		$form->adminMsg()->setTo(of_get_option('admin_name'),of_get_option('admin_email'));
 		$form->adminMsg()->setSubject('Donation Notification');
 				
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 		
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('address',$form->outputValue('address'));
@@ -90,7 +90,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->setVariable('phone',$form->outputValue('phone'));
 		$form->adminMsg()->setVariable('permalink',get_permalink());
 	
-		$form->adminMsg()->setVariable('amount',$form->outputValue('amount'));
+		$form->adminMsg()->setVariable('amount','$' . $form->outputValue('amount'));
 				
 		switch ($form->outputValue('recurring')) {
 			
@@ -110,13 +110,13 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->send();	
 					
 		$form->userMsg('affiliate-user-donate');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("Thank you for your generous donation!");
 
 		
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
-		$form->userMsg()->setVariable('affiliate_city',AFFILIATE_CITY);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
+		$form->userMsg()->setVariable('affiliate_city', of_get_option('location_col'));
 
 		$form->userMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->userMsg()->setVariable('address',$form->outputValue('address'));
@@ -129,7 +129,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 						
 		$form->userMsg()->setVariable('datetime',date("F j, Y, g:i a"));
 
-		$form->userMsg()->setVariable('amount',$form->outputValue('amount'));
+		$form->userMsg()->setVariable('amount', '$' . $form->outputValue('amount'));
 		$form->userMsg()->setVariable('cc',$form->outputValue('cc'));
 
 		switch ($form->outputValue('recurring')) {
@@ -174,7 +174,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -594,7 +594,7 @@ get_header();
 			 				<!-- Amount Text -->
 			 					
 							<div class="form-group row clearfix">
-								<div class="col-sm-4">
+								<div class="col-sm-5">
 									<label for="additional_amount">Amount of Donation (US$): <span class="required" title="This field is required.">*</span></label>
 									<input type="text" name="amount" size="10" maxlength="6" value="<?php echo esc_attr($_POST['amount']); ?>">
 								</div>
@@ -603,7 +603,7 @@ get_header();
 							<!-- Credit Card Number Text -->
 
 							<div class="form-group row clearfix">
-								<div class="col-sm-4">
+								<div class="col-sm-5">
 								    <label for="cc">Credit Card Number: <span class="required" title="This field is required.">*</span></label>
 								    <input type="text" name="cc" value="<?php echo esc_attr($_POST['cc']); ?>">
 								</div>
@@ -664,7 +664,7 @@ get_header();
 								<div class="col-sm-8">
 		 							<label for="recurring">Make your contribution recurring. <span class="required" title="This field is required.">*</span></label>
 		 							<p class="form-caption">
-		 								<?php echo(AFFILIATE_NAME); ?> encourages supporters to make recurring contributions.
+		 								<?php bloginfo('name'); ?> encourages supporters to make recurring contributions.
 		 							</p>
 		 							<div class="radio">
 		 								<label> 									
@@ -693,14 +693,14 @@ get_header();
 						<fieldset>
 							<div class="checkbox">
 								<label for="email_signup">
-									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php echo(AFFILIATE_NAME); ?>.
+									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php bloginfo('name'); ?>.
 								</label>	
 							</div>
 						</fieldset>
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

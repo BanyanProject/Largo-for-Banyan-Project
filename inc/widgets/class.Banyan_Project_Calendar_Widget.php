@@ -19,11 +19,13 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
 	
      	if (isset($args['before_widget'])) echo $args['before_widget'];
 		
-		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+		if ( is_category()) {
+			
+			$cat_name = get_cat_name(get_queried_object_id());				
+			echo $args['before_title'] . apply_filters( 'widget_title', $cat_name . ' Calendar' ). $args['after_title'];
 		}
 		else {
-			apply_filters( 'widget_title', $this->default_title );
+			echo (apply_filters( 'widget_title', $this->default_title ));
 		}
 		
 		?>
@@ -78,7 +80,7 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
               
             </div>
 
-
+			<p><a href="/community-events-calendar/?cid=<?php echo(get_queried_object_id()); ?>"><span class="glyphicon glyphicon-calendar"></span> See Full Calendar</a></p>
           
           </script>
         </div>		
@@ -91,6 +93,7 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
 		if (isset($args['after_widget'])) echo $args['after_widget'];
 	}
 	
+	/*
 	public function form( $instance ) {
 		if ( isset( $instance[ 'title' ] ) ) {
 			$title = $instance[ 'title' ];
@@ -111,6 +114,8 @@ class Banyan_Project_Calendar_Widget extends WP_Widget {
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		return $instance;
 	}
+	 * 
+	 */
 
 }
 

@@ -58,12 +58,19 @@ abstract class FormSubmission {
 		
 		$this->output[SUBMISSION_TABLE]['form'] = get_class($this);
 		
-		// TODO: add session id, member id fields
 		if (wp_get_session_token())
 			$this->output[SUBMISSION_TABLE]['session_token'] = wp_get_session_token();
 		
-		if (is_user_logged_in())
+		if (is_user_logged_in()){
+			
 			$this->output[SUBMISSION_TABLE]['user_id'] = get_current_user_id();
+		
+			if (defined('NB_SLUG'))
+				$this->output[SUBMISSION_TABLE]['nationbuilder_slug'] = NB_SLUG;
+		
+			$this->output[SUBMISSION_TABLE]['nationbuilder_id'] = nb_get_user_meta(get_current_user_id(), 'id');
+			$this->output[SUBMISSION_TABLE]['is_member'] = nb_is_member();
+		}
 		
 		// google analytics fields
 		if (isset($_COOKIE['__utma']))
@@ -363,6 +370,8 @@ abstract class FormSubmission {
 				case 'submitted' :
 				case 'token' :
 				case 'submit' :
+				case 'action' :
+				case 'term_id' :
 					
 					break; 
 				
@@ -426,12 +435,12 @@ abstract class FormSubmission {
 		$id = NUlL;
 		
 		foreach ($this->output as $table => $fields) {
-				
+					
 			if ($table != SUBMISSION_TABLE && $id != NULL)
 				$fields['id'] = $id;	
 				
 			$res = $wpdb->insert($table,$fields);
-			
+						
 			if ($table == SUBMISSION_TABLE)
 				$id = $wpdb->insert_id;
 		}
@@ -453,6 +462,10 @@ abstract class FormSubmission {
 			return $this->output[$this->dbtable][$field];
 		
 		return NULL;
+	}
+
+	public function getValidationErrors() {
+		return $this->validationErrors;
 	}
 
 	protected function validator() {

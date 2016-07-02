@@ -30,7 +30,7 @@ class Banyan_Project_Related_Articles_Widget extends WP_Widget {
 		$rel_posts = new WP_Query( array(
  			'post__in' => $ids
  			,'posts_per_page' => $instance['listings']
- 			, 'ignore_sticky_posts' => true
+ 			,'ignore_sticky_posts' => true
  			,'tax_query' => array(
 				array(
 					'taxonomy' => 'post-type'
@@ -71,10 +71,10 @@ class Banyan_Project_Related_Articles_Widget extends WP_Widget {
 	        			<?php echo(get_the_post_thumbnail(get_the_ID(),'thumbnail',array('class' => 'alignleft'))); ?>
 	        			
 	        			<?php endif; ?>
-	        			
+	        			 
 		        		<h4 class="entry-title"><a href="<?php the_permalink(); ?>" ><?php the_title(); ?></a></h4>
 	        		
-	        			<?php largo_excerpt(get_the_ID(), 1, false, '', true); ?>
+	        		    <p><?php bp_simple_excerpt(get_the_ID(), 1, false, '', true); ?></p>
 
 						<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 	        			

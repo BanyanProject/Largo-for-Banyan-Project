@@ -14,8 +14,10 @@
 								</header>
 								
 								<div class="entry-content">
-									<?php largo_excerpt($post, 4, false); ?>
+									<?php largo_excerpt($post, 5, false); ?>
 								
+									<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
+									
 									<?php if (largo_post_in_series()) {
 										$feature = largo_get_the_main_feature();
 										$feature_posts = largo_get_recent_posts_for_term($feature, 1, 1);
@@ -31,6 +33,5 @@
 									} ?>
 								</div>
 		
-							<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 								
 							</article>

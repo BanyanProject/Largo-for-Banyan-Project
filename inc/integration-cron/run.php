@@ -8,7 +8,6 @@ require_once('class.DonateCron.php');
 require_once('class.EmailNewsletterCron.php');
 require_once('class.FoundingMembershipCron.php');
 require_once('class.MembershipCron.php');
-require_once('class.SendFileCron.php');
 
 $contact = new ContactCron;
 $contact->run();
@@ -25,7 +24,5 @@ $founding->run();
 $member = new MembershipCron;
 $member->run();
 
-$file = new SendFileCron;
-$file->run();
 		
 ?>

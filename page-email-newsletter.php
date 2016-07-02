@@ -45,22 +45,22 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid()) {
 		
 		$form->adminMsg('affiliate-admin-email-newsletter');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
+		$form->adminMsg()->setTo(of_get_option('admin_name'), of_get_option('admin_email'));
 		$form->adminMsg()->setSubject('Email Newsletter Sign-up Notification');
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);		
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));		
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('user_email',$form->outputValue('email'));		
 		$form->adminMsg()->setVariable('permalink',get_permalink());
 		$form->adminMsg()->send();
 		
-		$name = AFFILIATE_NAME;
+		$name = get_bloginfo('name');
 		
 		$form->userMsg('affiliate-user-email-newsletter');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("You're subscribed to {$name}'s email newsletter");
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 		$form->userMsg()->setVariable('user_email',$form->outputValue('email'));		
 		$form->userMsg()->setVariable('unsubscribe_link',EMAIL_NEWSLETTER_UNSUBSCRIBE_LINK);		
 		$form->userMsg()->send();		
@@ -92,7 +92,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -134,7 +134,7 @@ get_header();
 						
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

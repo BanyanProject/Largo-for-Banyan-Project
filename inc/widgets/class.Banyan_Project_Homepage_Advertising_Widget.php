@@ -17,27 +17,30 @@ class Banyan_Project_Homepage_Advertising_Widget extends WP_Widget {
 	
 	public function widget( $args, $instance ) {
 	
-     	if (isset($args['before_widget'])) echo $args['before_widget'];
-		
-		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+		if (bp_adgroup_has_ads(2)) {
+	
+	     	if (isset($args['before_widget'])) echo $args['before_widget'];
+			
+			if ( ! empty( $instance['title'] ) ) {
+				echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+			}
+			else {
+				apply_filters( 'widget_title', $this->default_title );
+			}
+			
+			?>
+			
+	        <div class="ad-outerwrap ad-outerwrap-sidebar">
+	        	<div class="ad-innerwrap ad-innerwrap-sidebar">
+	 				<div>Advertisement</div>
+	       			<?php echo adrotate_group(2); ?>
+	        	</div>
+	      	</div>		
+			
+			<?php
+			
+			if (isset($args['after_widget'])) echo $args['after_widget'];
 		}
-		else {
-			apply_filters( 'widget_title', $this->default_title );
-		}
-		
-		?>
-		
-        <div class="ad-outerwrap ad-outerwrap-sidebar">
-        	<div class="ad-innerwrap ad-innerwrap-sidebar">
- 				<div>Advertisement</div>
-       			<?php echo adrotate_group(2); ?>
-        	</div>
-      	</div>		
-		
-		<?php
-		
-		if (isset($args['after_widget'])) echo $args['after_widget'];
 	}
 	
 	public function form( $instance ) {

@@ -22,8 +22,8 @@ if (!class_exists('Banyan_Project_Related_Events_Widget'))
 if (!class_exists('Banyan_Project_Related_Articles_Widget'))
 	require_once('inc/widgets/class.Banyan_Project_Related_Articles_Widget.php');
 
-if (!class_exists('Banyan_Project_Homepage_Advertising_Widget'))
-	require_once('inc/widgets/class.Banyan_Project_Homepage_Advertising_Widget.php');
+//if (!class_exists('Banyan_Project_Homepage_Advertising_Widget'))
+//	require_once('inc/widgets/class.Banyan_Project_Homepage_Advertising_Widget.php');
 
 if (!class_exists('Banyan_Project_Email_Signup_Widget'))
 	require_once('inc/widgets/class.Banyan_Project_Email_Signup_Widget.php');
@@ -31,9 +31,38 @@ if (!class_exists('Banyan_Project_Email_Signup_Widget'))
 if (!class_exists('Banyan_Project_Recent_Blog_Posts_Widget'))
 	require_once('inc/widgets/class.Banyan_Project_Recent_Blog_Posts_Widget.php');
 
+if (!class_exists('Banyan_Project_Category_Articles_Widget'))
+	require_once('inc/widgets/class.Banyan_Project_Category_Articles_Widget.php');
+
+/**
+ * Register a custom homepage layout
+ *
+ * @see "homepages/layouts/your_homepage_layout.php"
+ */
+function register_custom_homepage_layouts() {
+	
+	include_once __DIR__ . '/homepages/layouts/HomepageThreeColumn.php';
+	register_homepage_layout('HomepageThreeColumn');
+
+	include_once __DIR__ . '/homepages/layouts/HomepageLead.php';
+	register_homepage_layout('HomepageLead');
+
+	unregister_homepage_layout('HomepageBlog');
+	unregister_homepage_layout('HomepageSingle');
+	unregister_homepage_layout('HomepageSingleWithFeatured');
+	unregister_homepage_layout('HomepageSingleWithSeriesStories');
+	unregister_homepage_layout('TopStories');
+	unregister_homepage_layout('LegacyThreeColumn');	
+	
+}
+add_action('init', 'register_custom_homepage_layouts', 100);
+
 
 require_once('inc/database.php');
 require_once('inc/curated-comments.php');
+require_once('inc/article-feedback.php');
+require_once('inc/nationbuilder.php');
+
 
 /* Required Variables */
 
@@ -49,7 +78,17 @@ define('SHOW_SECONDARY_NAV',false);
 
 /* Config */
 	
-date_default_timezone_set(TIMEZONE); 
+if (get_option('timezone_string'))
+	date_default_timezone_set(get_option('timezone_string')); 
+else 
+	date_default_timezone_set('America/New_York');
+ 
+/**
+ * Placeholders for NationBuilder membership functions
+ */ 
+function is_member() {
+	return is_user_logged_in();	
+}
  
 /**
  * Meta boxes
@@ -264,6 +303,76 @@ function bp_register_custom_fields() {
  
 add_action('init','bp_register_custom_fields');
  
+/***
+ * Additional Options for the Theme Options menu
+ **/  
+ function bp_options($options) {
+ 	
+	$options[] = array(
+		'name' 	=> __('Additional Banyan Project Options', 'largo'),
+		'type'	=> 'info'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Default From Email Address.</b> The email address that transactional emails should be sent from. The blog title will be used for the from name.', 'largo'),
+		'id' 	=> 'from_email',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Executive Director Name.</b> Who is the Executive Director of this organization? Used for transactional emails.', 'largo'),
+		'id' 	=> 'ed_name',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Executive Director Email.</b> What is the Executive Director\'s email address? Used for transactional emails.', 'largo'),
+		'id' 	=> 'ed_email',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Administrator Name.</b> Who is the Administrator of this organization? Used for transactional emails.', 'largo'),
+		'id' 	=> 'admin_name',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Administrator Email.</b> What is the Administrator\'s email address? Used for transactional emails.', 'largo'),
+		'id' 	=> 'admin_email',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Editor Name.</b> Who is the Editor of this organization? Used for transactional emails.', 'largo'),
+		'id' 	=> 'editor_name',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Editor Email.</b> What is the Editor\'s email address? Used for transactional emails.', 'largo'),
+		'id' 	=> 'editor_email',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	$options[] = array(
+		'desc' 	=> __('<b>Location.</b> What is the colloquial name of the city or location in which you operate?', 'largo'),
+		'id' 	=> 'location_col',
+		'std' 	=> '',
+		'type' 	=> 'text'
+	);
+
+	return $options;		
+} 
+ 
+add_filter('largo_options','bp_options'); 
  
 /**
  * Custom URL type for events
@@ -313,8 +422,16 @@ function bp_clickstream_tracking($query)
 	if (wp_get_session_token())
 		$data['session_token'] = wp_get_session_token();
 	
-	if (is_user_logged_in())
+	if (is_user_logged_in()) {
+		
 		$data['user_id'] = get_current_user_id();
+		
+		if (defined('NB_SLUG'))
+			$data['nationbuilder_slug'] = NB_SLUG;
+		
+		$data['nationbuilder_id'] = nb_get_id($data['user_id']);
+		$data['is_member'] = nb_is_member($data['user_id']);
+	}
 
 	// google analytics fields
 	if (isset($_COOKIE['__utma']))
@@ -331,8 +448,7 @@ function bp_clickstream_tracking($query)
 		
 	if (isset($_COOKIE['___utmx']))
 		$data['utmx'] = $_COOKIE['___utmx'];	
-
-	// 
+	
 	$data['request'] = $query->request;
 	$data['matched_rule'] = $query->matched_rule;
 	$data['matched_query'] = $query->matched_query;
@@ -406,7 +522,7 @@ function get_post_template( $template ) {
 }
  
  
-function largo_sidebar_span_class() {
+function bp_sidebar_span_class() {
 	global $post;
 
 	if (is_single() || is_singular()) {
@@ -431,18 +547,80 @@ function largo_sidebar_span_class() {
 		return 'col-right-sidebar';
 }
  
- 
 /**
- * Register a custom homepage layout
- *
- * @see "homepages/layouts/your_homepage_layout.php"
+ * Return twitter handle, based on twitter link in the Theme Option 
  */
-function register_custom_homepage_layout() {
-	include_once __DIR__ . '/homepages/layouts/HomepageThreeColumn.php';
-	register_homepage_layout('HomepageThreeColumn');
-}
-add_action('init', 'register_custom_homepage_layout', 0);
+function bp_get_twitter_username($prefix='') {
+	$url = of_get_option('twitter_link');
+	return $prefix . str_replace(array('https://twitter.com/', 'http://twitter.com/'), '', $url);
+}   
+ 
+function bp_get_the_term_ids($post_id=NULL) {
+	if ($post_id == NULL)
+		$post = get_post();
+	else 
+		$post = get_post($post_id);
+	
+	$categories = get_the_category($post->ID);
+	
+	$term_ids = array();
+	
+	foreach($categories as $category) {
+		$term_ids[] = $category->term_id;
+	}
+	
+	return $term_ids;
+} 
+ 
+function bp_adgroup_has_ads($group) {
+	
+	if (strstr(adrotate_group($group),'<div'))
+		return true;
+	else
+		return false;
+} 
+ 
+function bp_render_adgroup($group,$type,$disclosure=true) {
+		
+	if ($disclosure) :	
 
+		$adwrap = "
+			<div class=\"ad-outerwrap ad-outerwrap-{$type}\">
+				<div class=\"ad-innerwrap ad-innerwrap-{$type}\">
+					<div>Advertisement</div>
+					<span>" . adrotate_group($group) . "</span>
+				</div>			
+			</div>
+		";
+	
+	else :
+		
+		$adwrap = "
+			<div class=\"ad-outerwrap ad-outerwrap-{$type}\">
+				<div class=\"ad-innerwrap ad-innerwrap-{$type}\">
+					<span>" . adrotate_group($group) . "</span>
+				</div>			
+			</div>
+		";
+			
+	endif;	
+	
+	switch ($type) {
+		
+		case 'sidebar' : 
+		
+			echo "<aside class=\"widget clearfix\"><h3 class=\"widgettitle\">Our Sponsors</h3>";
+			echo($adwrap);
+			echo("</aside>");
+			return;
+		
+		case 'leaderboard' :
+		default :
+			echo($adwrap);
+			return;
+	}	
+} 
+ 
 /**
  * Homepage: Get the post to display at the top of the home single template
  */
@@ -501,6 +679,41 @@ function bp_home_single_top() {
 }
 
 
+function bp_simple_excerpt( $the_post=null, $sentence_count = 5, $use_more = false, $more_link = '', $echo = true, $strip_tags = true, $strip_shortcodes = true ) {
+
+		$the_post = get_post($the_post); // Normalize it into a post object
+
+		if (!empty($the_post->post_excerpt)) {
+			// if a post has a custom excerpt set, we'll use that
+			$content = apply_filters('get_the_excerpt', $the_post->post_excerpt);
+		} else if (is_home() && preg_match('/<!--more(.*?)?-->/', $the_post->post_content, $matches) > 0) {
+			// if we're on the homepage and the post has a more tag, use that
+			$parts = explode($matches[0], $the_post->post_content, 2);
+			$content = $parts[0];
+		} else {
+			// otherwise we'll just do our best and make the prettiest excerpt we can muster
+			$content = largo_trim_sentences($the_post->post_content, $sentence_count);
+		}
+
+		// optionally strip shortcodes and html
+		$output = '';
+		if ( $strip_tags && $strip_shortcodes )
+			$output .= strip_tags( strip_shortcodes ( $content ) );
+		else if ( $strip_tags )
+			$output .= strip_tags( $content );
+		else if ( $strip_shortcodes )
+			$output .= strip_shortcodes( $content );
+		else
+			$output .= $content;
+
+		if ( $echo )
+			echo $output;
+
+		return $output;
+}
+
+
+
 /**
  * Include compiled style.css
  */
@@ -529,10 +742,21 @@ function register_custom_widget() {
 	register_widget( 'Banyan_Project_Events_Listing_Widget' );
 	register_widget( 'Banyan_Project_Related_Events_Widget' );
 	register_widget( 'Banyan_Project_Related_Articles_Widget' );
-	register_widget( 'Banyan_Project_Homepage_Advertising_Widget' );
+	//register_widget( 'Banyan_Project_Homepage_Advertising_Widget' );
 	register_widget( 'Banyan_Project_Email_Signup_Widget' );
 	register_widget( 'Banyan_Project_Recent_Blog_Posts_Widget' );
+	register_widget( 'Banyan_Project_Category_Articles_Widget' );
+	
+	unregister_widget('largo_author_bio_widget');
+	unregister_widget('largo_donate_widget');
+	unregister_widget('largo_facebook_widget');
+	unregister_widget('largo_follow_widget');
+	unregister_widget('largo_prev_next_posts_links_widget');
+	unregister_widget('largo_related_posts_widget');
+	unregister_widget('largo_sidebar_featured_widget');
+	unregister_widget('largo_tag_list_widget');
 }
+
 add_action('widgets_init', 'register_custom_widget', 1);
 
 /**
@@ -551,7 +775,7 @@ function enqueue_custom_script() {
 		, '1.11.2'
 		, true
 	);
-	
+
 	wp_enqueue_script(
 		'bootstrap'
 		, '/wp-content/themes/Largo-for-Banyan-Project/js/bootstrap'. $suffix . '.js'

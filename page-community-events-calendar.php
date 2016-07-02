@@ -2,43 +2,88 @@
 /**
  * Description: Calendar Page
  */
-    
-wp_enqueue_script(
-	'calendar',
-	'/wp-content/themes/Largo-for-Banyan-Project/js/calendar.php',
-	array('jquery'),
-	'0.1',
-	true
-);
-  
+
+if (isset($_GET['cid']) && is_numeric($_GET['cid'])) {
+
+	$cid = sanitize_text_field($_GET['cid']);
+	
+	wp_enqueue_script(
+		'calendar',
+		'/wp-content/themes/Largo-for-Banyan-Project/js/calendar.php?cid='.$cid,
+		array('jquery'),
+		'0.1',
+		true
+	);
+
+	$querystr = "
+	select distinct 
+		p.*
+		, sd.meta_value as `start_date`
+		, ed.meta_value as `end_date`
+		, lt.meta_value as `location_title`
+		, a.meta_value as `address`
+		, c.meta_value as `city`
+	from wp_posts p 
+		join wp_postmeta sd on p.ID = sd.post_id
+			and sd.meta_key = 'start_date'
+		join wp_postmeta ed on p.ID = ed.post_id
+			and ed.meta_key = 'end_date' 
+		join wp_postmeta lt on p.ID = lt.post_id
+			and lt.meta_key = 'location_title'
+		left join wp_postmeta a on p.ID = a.post_id
+			and a.meta_key = 'address'
+		left join wp_postmeta c on p.ID = c.post_id
+			and c.meta_key = 'city'
+		join wp_term_relationships r on p.ID = r.object_ID
+	where p.post_status = 'publish'
+		and ed.meta_value between now() and date_add(now(), interval 60 day)
+		and r.term_taxonomy_id = {$cid}
+	order by `start_date`
+	limit 40
+	";
+
+} else {
+		
+	$cid = null;
+		
+	wp_enqueue_script(
+		'calendar',
+		'/wp-content/themes/Largo-for-Banyan-Project/js/calendar.php?',
+		array('jquery'),
+		'0.1',
+		true
+	);
+	
+	$querystr = "
+	select distinct 
+		p.*
+		, sd.meta_value as `start_date`
+		, ed.meta_value as `end_date`
+		, lt.meta_value as `location_title`
+		, a.meta_value as `address`
+		, c.meta_value as `city`
+	from wp_posts p 
+		join wp_postmeta sd on p.ID = sd.post_id
+			and sd.meta_key = 'start_date'
+		join wp_postmeta ed on p.ID = ed.post_id
+			and ed.meta_key = 'end_date' 
+		join wp_postmeta lt on p.ID = lt.post_id
+			and lt.meta_key = 'location_title'
+		left join wp_postmeta a on p.ID = a.post_id
+			and a.meta_key = 'address'
+		left join wp_postmeta c on p.ID = c.post_id
+			and c.meta_key = 'city'
+	where p.post_status = 'publish'
+		and ed.meta_value between now() and date_add(now(), interval 60 day)
+	order by `start_date`
+	limit 40
+	";
+
+} 
+       
 global $wpdb;
 
 // Query for upcoming events
-
-$querystr = "
-select distinct 
-	p.*
-	, sd.meta_value as `start_date`
-	, ed.meta_value as `end_date`
-	, lt.meta_value as `location_title`
-	, a.meta_value as `address`
-	, c.meta_value as `city`
-from wp_posts p 
-	join wp_postmeta sd on p.ID = sd.post_id
-		and sd.meta_key = 'start_date'
-	join wp_postmeta ed on p.ID = ed.post_id
-		and ed.meta_key = 'end_date' 
-	join wp_postmeta lt on p.ID = lt.post_id
-		and lt.meta_key = 'location_title'
-	left join wp_postmeta a on p.ID = a.post_id
-		and a.meta_key = 'address'
-	left join wp_postmeta c on p.ID = c.post_id
-		and c.meta_key = 'city'
-where p.post_status = 'publish'
-	and ed.meta_value between now() and date_add(now(), interval 60 day)
-order by `start_date`
-limit 40
-";
 
 $events = $wpdb->get_results($querystr, OBJECT);
 				 
@@ -69,7 +114,33 @@ get_header();
 					
 					<div class="row wrap-calendar-intro ">
 						<div class="col-md-8 col-md-offset-2">
+							<?php get_template_part('partials/social', 'horizontal'); ?>
+							
 							<?php the_content(); ?>
+											
+						</div>
+						
+						<div class="col-md-4 col-md-offset-4">
+							<form method="get" id="category-form">
+								<label>Select events to show</label>
+								<?php wp_dropdown_categories(array(
+									'show_option_none'   => 'All Events',
+									'option_none_value'  => '',
+									'orderby'            => 'NAME', 
+									'order'              => 'ASC',
+									'show_count'         => false,
+									'hide_empty'         => false, 
+									'echo'               => true,
+									'hierarchical'       => true, 
+									'name'               => 'cid',
+									'depth'              => 1,
+									'taxonomy'           => 'category',
+									'hide_if_empty'      => false,
+									'selected'			 => $cid,
+									'id'				 => 'category-select'
+								)); ?>
+								
+							</form>
 						</div>
 					</div>
 
@@ -119,23 +190,7 @@ get_header();
 												?>
 											
 											</div>	
-											
-											<div class="wrap-sharetools-horizontal-small hidden-xs hidden-sm">
-									
-												<span class="sharetool sharetool-facebook">
-													<div class="icon"></div>
-												</span>
-									
-												<span class="sharetool sharetool-twitter">
-													<div class="icon"></div>
-												</span>
-																		
-												<span class="sharetool sharetool-googleplus">
-													<div class="icon"></div>
-												</span>
-												
-											</div>
-												
+																							
 										</div>
 	
 									</div>

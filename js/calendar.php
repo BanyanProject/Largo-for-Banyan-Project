@@ -32,6 +32,7 @@ if (isset($_GET['cid']) && is_numeric($_GET['cid'])) {
 	where p.post_status = 'publish'
 		and ed.meta_value between date_sub(now(), interval 30 day) and date_add(now(), interval 180 day)
 		and r.term_taxonomy_id = {$cid}
+	order by sd.meta_value
 	";
 	
 } else {
@@ -57,6 +58,7 @@ if (isset($_GET['cid']) && is_numeric($_GET['cid'])) {
 			and c.meta_key = 'city'
 	where p.post_status = 'publish'
 		and ed.meta_value between date_sub(now(), interval 30 day) and date_add(now(), interval 180 day)
+	order by sd.meta_value
 	";
 }
 
@@ -87,8 +89,11 @@ $(document).ready(function() {
 		]
 	});
 	
-
 	$('[data-toggle="tooltip"]').tooltip();	
+	
+	$('#category-select').change(function(){
+		$('#category-form').submit();
+	});
 });
 
 function formatMMd($datestr) {	

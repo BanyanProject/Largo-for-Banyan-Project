@@ -84,7 +84,6 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->validate('phone','stringLength',array('minlength' => 6, 'maxlength' => 20));
 		
 		$form->validate('cc','required');
-		$form->validate('cc','visaMasterCardAmExDiscover');
 		$form->validate('exp_month','required');
 		$form->validate('exp_month','allowedValues',array('01','02','03','04','05','06','07','08','09','10','11','12'));
 		$form->validate('exp_year','required');
@@ -100,12 +99,13 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid() && $form->isApproved()) {
 		
 		$form->adminMsg('affiliate-admin-membership');
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
+		$form->adminMsg()->setTo(of_get_option('ed_name'), of_get_option('ed_email'));
+		$form->adminMsg()->setTo(of_get_option('admin_name'), of_get_option('admin_email'));
 				
 		$form->adminMsg()->setSubject('Membership Purchase Notification');
 		
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 		
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->adminMsg()->setVariable('address',$form->outputValue('address'));
@@ -133,21 +133,21 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		}		
 
 		if ($form->outputValue('additional_donation' == '1'))
-			$form->adminMsg()->setVariable('additional_donation',$form->outputValue('additional_amount'));
+			$form->adminMsg()->setVariable('additional_donation', '$' . $form->outputValue('additional_amount'));
 		else		
 			$form->adminMsg()->setVariable('additional_donation','None');
 			
-		$form->adminMsg()->setVariable('total_donation',$form->outputValue('total'));	
+		$form->adminMsg()->setVariable('total_donation','$' . $form->outputValue('total'));	
 		$form->adminMsg()->setVariable('permalink',get_permalink());
 		
 		$form->adminMsg()->send();
 				
 		$form->userMsg('affiliate-user-membership');
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
-		$form->userMsg()->setVariable('affiliate_city',AFFILIATE_CITY);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
+		$form->userMsg()->setVariable('affiliate_city', of_get_option('location_col'));
 
 		$form->userMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		$form->userMsg()->setVariable('address',$form->outputValue('address'));
@@ -175,12 +175,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		}		
 
 		if ($form->outputValue('additional_donation' == '1'))
-			$form->userMsg()->setVariable('additional_donation',$form->outputValue('additional_amount'));
+			$form->userMsg()->setVariable('additional_donation','$' . $form->outputValue('additional_amount'));
 		else		
 			$form->userMsg()->setVariable('additional_donation','None');
 			
 		$form->userMsg()->setVariable('datetime',date("F j, Y, g:i a"));
-		$form->userMsg()->setVariable('total_donation',$form->outputValue('total'));	
+		$form->userMsg()->setVariable('total_donation','$' . $form->outputValue('total'));	
 		$form->userMsg()->setVariable('cc',$form->outputValue('cc'));
 			
 		$form->userMsg()->send();	
@@ -189,13 +189,16 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	}
 
 	$form->persist();
-	
-	if (!$form->isValid())
-		$response = $form->formatErrorMsgHtml();
-		
+			
 	if ($form->isValid()) {
-		header("Location: ". home_url("/membership/thank-you"));
+				
+		if (!is_user_logged_in() && !get_user_by_email($form->outputValue('email')))
+			header("Location: ". home_url("/register/?redirect=membership"));
+		else
+			header("Location: ". home_url("/membership/thank-you"));
+
 		exit;
+		
 	} else
 		$response = $form->formatErrorMsgHtml();
 }
@@ -212,7 +215,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -248,7 +251,7 @@ get_header();
 		 							<div class="radio">
 		 								<label> 									
 		 									<input type="radio" name="type" value="500" id="type-500" <?php if (esc_attr($_POST['type']) == '500') echo 'checked'; ?> >
-		 									<span id="500-amount">$500/year</span>
+		 									<span id="500-amount">$500/year</span> <i>Angel Membership</i>
 		 								</label>
 		 							</div>
 		 							<div class="radio">
@@ -260,7 +263,7 @@ get_header();
 		 							<div class="radio">
 		 								<label> 									
 		 									<input type="radio" name="type" value="125" id="type-125" <?php if (esc_attr($_POST['type']) == '125') echo 'checked'; ?> >
-		 									<span id="125-amount">$125/year</span>
+		 									<span id="125-amount">$125/year</span> <i>Leaduing Membership</i>
 		 								</label>
 		 							</div>
 		 							<div class="radio">
@@ -284,7 +287,7 @@ get_header();
 								<div class="col-sm-8">
 		 							<label for="recurring">Pay membership dues with a recurring contribution. <span class="required" title="This field is required.">*</span></label>
 		 							<p class="form-caption">
-		 								<?php echo(AFFILIATE_NAME); ?> members are encouraged to pay dues with an automatically recurring contribution, which will keep your membership from expiring. 
+		 								<?php bloginfo('name'); ?> members are encouraged to pay dues with an automatically recurring contribution, which will keep your membership from expiring. 
 		 								Non-recurring memberships must be renewed every year.
 		 								Monthly recurring memberships will be billed 1/12 the annual membership rate each month.
 		 							</p>
@@ -314,7 +317,7 @@ get_header();
 							
 							<div class="form-group row clearfix">
 								<div class="col-sm-8">
-		 							<label for="additional_donation">Would you like to make an additional donation to <?php echo(AFFILIATE_NAME); ?>? <span class="required" title="This field is required.">*</span></label>
+		 							<label for="additional_donation">Would you like to make an additional donation to <?php bloginfo('name'); ?>? <span class="required" title="This field is required.">*</span></label>
 		 							<div class="radio">
 		 								<label> 									
 		 									<input type="radio" name="additional_donation" value="1" id="additional-donation-yes" <?php if (esc_attr($_POST['additional_donation']) == '1') echo 'checked'; ?> >
@@ -795,7 +798,7 @@ get_header();
 						<fieldset>
 							<div class="checkbox">
 								<label for="email_signup">
-									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php echo(AFFILIATE_NAME); ?>.
+									<input type="checkbox" name="email_signup" value="1" checked> Sign-up to receive weekly email updates from <?php bloginfo('name'); ?>.
 								</label>	
 							</div>
 						</fieldset>
@@ -804,7 +807,7 @@ get_header();
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" id="btn-submit" class="btn btn-success">
+						<input type="submit" value="Submit" id="btn-submit" class="btn btn-primary">
 					</form>
 					
 				</section><!-- .entry-content -->

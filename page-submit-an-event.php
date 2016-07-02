@@ -224,7 +224,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
 		$form->adminMsg()->setSubject('Event Submission');
 	
-		$form->adminMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 		$form->adminMsg()->setVariable('full_name',$display_name);
 		$form->adminMsg()->setVariable('sender_email',$user_email);		
 		$form->adminMsg()->setVariable('permalink',get_permalink());
@@ -275,7 +275,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->userMsg()->setTo($display_name, $user_email);
 		$form->userMsg()->setSubject("Thanks! We've received your event submission.");
 		
-		$form->userMsg()->setVariable('affiliate_name',AFFILIATE_NAME);
+		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 
 		$form->userMsg()->setVariable('event_name',$form->outputValue('post_title'));
 		$form->userMsg()->setContentMain($form->outputValue('post_content'));
@@ -341,7 +341,7 @@ get_header();
 
 ?>
 
-<div id="content" class="col-md-10 col-md-offset-1" role="main">
+<div id="content" class="col-md-8 col-md-offset-2" role="main">
 	
 	<?php
 		while ( have_posts() ) : the_post();
@@ -530,7 +530,7 @@ get_header();
 							<div class="form-group row clearfix">
 								<div class="col-sm-8">
 								    <label for="city">City: <span class="required" title="This field is required.">*</span></label>
-								    <input type="text" name="city" value="<?php echo(isset($_POST['city']) ? esc_attr($_POST['city']) : AFFILIATE_CITY); ?>">
+								    <input type="text" name="city" value="<?php echo(isset($_POST['city']) ? esc_attr($_POST['city']) : of_get_option('location_col')); ?>">
 								</div>
 							</div>
 							
@@ -632,12 +632,12 @@ get_header();
 
 						<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
 						<input type="hidden" name="submitted" value="1">
-						<input type="submit" value="Submit" class="btn btn-success">
+						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 					
 					<?php else : // user not logged in ?>
 					
-					<p>You must have a user account and be logged in to submit an event to <?php echo(AFFILIATE_NAME); ?></p>
+					<p>You must have a user account and be logged in to submit an event to <?php bloginfo('name'); ?></p>
 					
 					<p>Click here to create a user account.</p>
 					
