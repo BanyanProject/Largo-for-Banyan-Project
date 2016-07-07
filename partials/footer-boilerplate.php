@@ -14,10 +14,11 @@
 
 				<!-- If you enjoy this theme and use it on a production site we would appreciate it if you would leave the credit in place. Thanks :) -->
 				<p class="footer-credit"><?php largo_copyright_message(); ?></p>
-				<p class="footer-credit"><?php printf( __('This site built with <a href="%s">Project Largo</a> from <a href="%s">INN</a> and proudly powered by <a href="%s" rel="nofollow">WordPress</a>.', 'largo'),
+				<p class="footer-credit"><?php printf( __('This site built with <a href="%s">Project Largo</a> from <a href="%s">INN</a> and proudly powered by <a href="%s" rel="nofollow">WordPress</a>. Website and tech strategy by <a href="%s">Open Organize</a>.', 'largo'),
 						'http://largoproject.org',
 						'http://inn.org',
-						'http://wordpress.org'
+						'http://wordpress.org',
+						'http://openorganize.com/banyan-project'
 					 );
 				?></p>
 			</div>

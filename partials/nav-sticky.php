@@ -37,7 +37,7 @@
 							<?php endif; ?>
 
 							<?php
-							if ( !is_member() && of_get_option( 'show_donate_button') ) {
+							if ( !nb_is_member() && of_get_option( 'show_donate_button') ) {
 								if ($donate_link = of_get_option('donate_link')) { ?>
 								<li class="donate">
 									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">
@@ -102,7 +102,7 @@
 								);
 								largo_nav_menu($args);
 	
-								if ( !is_member() && of_get_option( 'show_donate_button') ) {
+								if ( !nb_is_member() && of_get_option( 'show_donate_button') ) {
 									if ($donate_link = of_get_option('donate_link')) { ?>
 									<li class="donate">
 										<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">

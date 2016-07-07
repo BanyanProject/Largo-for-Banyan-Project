@@ -7,10 +7,7 @@ require_once('inc/class.FormSubmission.php');
 
 if (!defined('EVENT_ID'))
 	define('EVENT_ID',13);
- 
-if (!defined('RECURRING_EVENT_ID'))
-	define('RECURRING_EVENT_ID',14);
- 
+  
  wp_enqueue_script(
 	'contact',
 	'/wp-content/themes/Largo-for-Banyan-Project/js/submit-an-event.js',
@@ -139,10 +136,7 @@ class EventForm extends FormSubmission {
 				$res = $wpdb->insert('wp_postmeta',$metadata);
 			}
 			
-			if ($this->outputValue('event_recurrence') == 'none')
-				$term_id = EVENT_ID;
-			else
-				$term_id = RECURRING_EVENT_ID;
+			$term_id = EVENT_ID;
 			
 			$termdata = array(
 				'object_id' => $post_id
