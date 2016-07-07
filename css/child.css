@@ -66,8 +66,17 @@ blockquote p {
 /***
  * Layout
  */
+
+#wpadminbar {
+  position: fixed;	
+}
 body.admin-bar .sticky-nav-holder-banyan {
-	top: 32px;
+  top: 46px;
+}
+@media (min-width: 768px) {
+  body.admin-bar .sticky-nav-holder-banyan {
+    top: 32px;
+  }
 }
 .sticky-nav-wrapper-banyan {
 	max-height: 53px;
@@ -94,6 +103,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 .home #site-header {
 	min-height: 0; /* Largo override */
 }
+
 .masthead 
 , #page
 , #site-footer
@@ -102,10 +112,36 @@ body.admin-bar .sticky-nav-holder-banyan {
 , .homepage-header-container
 , .sticky-footer-container
 , #before-footer {
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .masthead 
+  , #page
+  , #site-footer
+  , #footer-logos
+  , .sticky-nav-container
+  , .homepage-header-container
+  , .sticky-footer-container
+  , #before-footer {
+    padding: 0 28px;
+  }
+}
+
+@media (min-width: 992px) {
+  .masthead 
+  , #page
+  , #site-footer
+  , #footer-logos
+  , .sticky-nav-container
+  , .homepage-header-container
+  , .sticky-footer-container
+  , #before-footer {
 	max-width: 1230px;
 	width: 93.75%;
 	margin: 0 auto;
 	padding: 0 35px;
+  }
 }
 #page {
   padding-top: 53px;	
@@ -289,8 +325,9 @@ h2.subtitle {
 .is-video .embed-container {
 	margin-bottom: 0px;
 }
-
-
+.wrap-sm-horizontal {
+  margin-bottom: 2em;
+}
 
 h5.byline {
 	font-size: 15px;
@@ -450,11 +487,20 @@ p.shirttail
 .comment-meta a.comment-datetime:hover {
   text-decoration: underline;
 }
+
 .comment-meta .member-medal {
   float: right;
-  width: 140px;
-  height: 53px;
-  background: url('/wp-content/themes/Largo-for-Banyan-Project/img/member-medal-140.png') top center no-repeat;
+  width: 12%;
+  min-width: 65px;
+  max-width: 140px;
+  max-height: 53px;
+}
+
+@media (min-width: 992px) {	
+  .comment-meta .member-medal {
+    width: 140px;
+    height: 53px;
+  }
 }
 .comment-meta .member-medal span {
   display: none;
@@ -586,7 +632,6 @@ li.sharetool a:hover {
   color: #3982aa;
 }
 
-@media (min-width: 768px) {
   .wrap-sharetools-horizontal {
     padding: 0.5em 0 1em;
   }	
@@ -610,7 +655,6 @@ li.sharetool a:hover {
   	padding-left: 10px;
   }
   
-}
 
 @media (min-width: 992px) {
   .wrap-sharetools-horizontal-small {
@@ -867,7 +911,7 @@ li.related-story {
 		padding 0 8px;
 	}
 	.navbar li.home-logo > a img {
-		width: 40%;
+		width: 225px;
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -1129,21 +1173,30 @@ li.related-story {
 }
 
 #sidebar {
-	margin: 113px 0;
+	margin: 0;
 }
 #sidebar .widget
 , #middlebar .widget {
-	margin: 90px 0 0 0;
-	padding: 0;
-	border-top: 2px solid #c7edff;
-}
-.home #sidebar .widget {
-	
-}.section-header {
+	margin: 36px 0 0 0;
 	padding: 0;
 	border-top: 2px solid #c7edff;
 }
 
+@media (min-width: 768px) {
+  #sidebar {
+	margin: 113px 0;
+  }
+
+  #sidebar .widget
+  , #middlebar .widget {
+	margin: 90px 0 0 0;
+  }
+}
+
+.section-header {
+	padding: 0;
+	border-top: 2px solid #c7edff;
+}
 
 #sidebar .widget h2.widgettitle 
 , #sidebar .widget h3.widgettitle 
@@ -1430,12 +1483,22 @@ radio .label {
 
 /**
  * 	Modal Window
+ * 
  */
+
+
+
 .modal-dialog {
-	margin: 90px auto 50px;
+  margin: 20px 20px 20px 20px;
 }
-body.admin-bar .modal-dialog {
-	margin: 112px auto 50px;
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    margin: 90px auto 50px;
+  }
+  body.admin-bar .modal-dialog {
+    margin: 112px auto 50px;
+  } 
 }
 
 /**
@@ -1470,7 +1533,6 @@ body.admin-bar .modal-dialog {
 	margin: 0 0 2em;
 }
 .ad-innerwrap-leaderboard {
-	min-height: 90px;
 	max-width: 728px;
 }
 .homepage-header-container .ad-innerwrap-leaderboard {

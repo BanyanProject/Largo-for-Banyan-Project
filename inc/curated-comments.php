@@ -279,7 +279,7 @@ if ( ! function_exists( 'bp_comment' ) ) {
 					
 					<?php if ($comment->member) : ?>
 					<div class="member-medal">
-						<span><?php bloginfo('name'); ?> Member</span>
+						<img src="/wp-content/themes/Largo-for-Banyan-Project/img/member-medal-140.png" alt="<?php bloginfo('name'); ?> Member" />
 					</div>							
 					<?php endif; ?>	
 					

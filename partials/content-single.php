@@ -54,6 +54,10 @@ $top_term = largo_top_term(array('post' => get_the_ID(),'echo' => false,'link' =
 			
 			<div class="col-md-content">
 				
+				<div class="wrap-sm-horizontal hidden-md hidden-lg clearfix">
+					<?php get_template_part( 'partials/social', 'horizontal' ); ?>
+				</div>
+				
 				<!-- Byline and Dateline -->
 				<?php if (in_array($type->slug,array('news','blog'))) : ?>
 				<h5 class="byline"><?php largo_byline(); ?></h5>
