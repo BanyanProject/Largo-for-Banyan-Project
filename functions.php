@@ -100,6 +100,47 @@ function register_custom_homepage_layouts() {
 }
 add_action('init', 'register_custom_homepage_layouts', 100);
 
+/* Required Plugins Alert */
+
+add_action('admin_notices', 'showAdminMessages');
+
+function showAdminMessages()
+{
+	$plugin_messages = array();
+
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+	// AdRotate Pro
+	if(!is_plugin_active( 'adrotate-pro/adrotate-pro.php' ))
+	{
+		$plugin_messages[] = 'This theme requires you to install the AdRotate Pro plugin, <a href="https://ajdg.solutions/products/adrotate-for-wordpress/">download it here</a>.';
+	}
+
+	// Developer's Custom Fields
+	if(!is_plugin_active( 'developers-custom-fields/slt-custom-fields.php' ))
+	{
+		$plugin_messages[] = 'This theme requires you to install the Developer\'s Custom Fields plugin, <a href="https://wordpress.org/plugins/developers-custom-fields/">download it here</a>.';
+	}
+
+	// Theme my Login
+	if(!is_plugin_active( 'theme-my-login/theme-my-login.php' ))
+	{
+		$plugin_messages[] = 'This theme requires you to install the Theme My Login plugin, <a href="https://wordpress.org/plugins/theme-my-login/">download it here</a>.';
+	}
+
+	if(count($plugin_messages) > 0)
+	{
+		echo '<div id="message" class="error">';
+
+			foreach($plugin_messages as $message)
+			{
+				echo '<p><strong>'.$message.'</strong></p>';
+			}
+
+		echo '</div>';
+	}
+}
+
  
 /* Custom URL type for events */
 
