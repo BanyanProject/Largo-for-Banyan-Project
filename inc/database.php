@@ -271,9 +271,6 @@ function largo_bp_install() {
 		  KEY user_id (user_id),
 		  KEY nationbuilder_id (nationbuilder_id)
 		) {$charsetCollate};
-		
-
-			
 	";
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
