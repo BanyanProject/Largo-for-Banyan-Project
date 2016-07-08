@@ -17,6 +17,7 @@ require_once('inc/nationbuilder.php');
 
 /* Configuration - Required Variables */
 
+define('SHOW_STICKY_NAV',true);
 define('SHOW_GLOBAL_NAV',true);
 define('SHOW_MAIN_NAV',false);
 define('SHOW_SECONDARY_NAV',false);
@@ -63,11 +64,12 @@ function register_custom_widget() {
 	register_widget( 'Banyan_Project_Recent_Blog_Posts_Widget' );
 	register_widget( 'Banyan_Project_Category_Articles_Widget' );
 	
-	unregister_widget('largo_author_bio_widget');
+	unregister_widget('largo_author_widget');
 	unregister_widget('largo_donate_widget');
 	unregister_widget('largo_facebook_widget');
 	unregister_widget('largo_follow_widget');
-	unregister_widget('largo_prev_next_posts_links_widget');
+	unregister_widget('largo_prev_next_post_links_widget');
+	unregister_widget('largo_recent_posts_widget');
 	unregister_widget('largo_related_posts_widget');
 	unregister_widget('largo_sidebar_featured_widget');
 	unregister_widget('largo_tag_list_widget');

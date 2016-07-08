@@ -111,7 +111,7 @@
 			 */
 			do_action( 'largo_before_header' );
 
-			get_template_part( 'partials/largo-header' );
+			//get_template_part( 'partials/largo-header' );
 
 			/**
 			 * Fires after the Largo header content.

@@ -1253,6 +1253,18 @@ li.related-story {
 	margin: 0 0 0.5em 0;
 }
 
+/* Sidebar & Widgets: Popular Posts */
+
+.widget_analytic-bridge-popular-posts h5 {
+  font-family: Merriweather, Georgia, "Times New Roman", Times, serif;
+  font-weight: normal;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+.widget_analytic-bridge-popular-posts li {	
+  margin: 1em 0;	
+}
+
 /* Forms */
 
 legend {

@@ -59,18 +59,13 @@
 					</a>
 
 					<div class="nav-left">
-						<?php
-							if ( of_get_option( 'show_sitename_in_sticky_nav', 1 ) ) {
-								echo '<li class="site-name"><a href="/">' . get_bloginfo('name') . '</a></li>';
-							} else if ( of_get_option( 'sticky_header_logo' ) == '' ) { ?>
-								<li class="home-link"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php largo_home_icon( 'icon-white' ); ?></a></li>
-							<?php } else { ?>
+							<ul>
 								<li class="home-logo">
 									<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
 									<img src="/wp-content/uploads/2015/10/sticky-header-logo-275.png"></a>
 								</li>
 
-						<?php } ?>
+							</ul>
 					</div>
 					<div class="nav-shelf">
 
@@ -89,9 +84,7 @@
 								</a>
 							</li>
 							<?php
-								if ( of_get_option( 'show_sitename_in_sticky_nav', 1 ) )
-									echo '<li class="site-name"><a href="/">' . get_bloginfo('name') . '</a></li>';
-	
+
 								$args = array(
 								'theme_location' => 'main-nav',
 								'depth'		 => 0,
