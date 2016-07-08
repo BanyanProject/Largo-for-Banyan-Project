@@ -272,7 +272,7 @@ function bp_comment( $comment, $args = array('max_depth' => 3), $depth = 1 ) {
 									
 								if ($comment->comment_post_ID != 0) {
 									echo('<span>&nbsp;&nbsp;>&nbsp;&nbsp;</span>');
-									$parent = get_post($comment->post_ID);
+									$parent = get_post($comment->comment_post_ID);
 									printf('<a class="comment-parent" href="%1$s">%2$s</a>', get_permalink($parent) , $parent->post_title);
 								}
 									

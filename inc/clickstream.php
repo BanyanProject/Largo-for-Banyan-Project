@@ -51,7 +51,7 @@ function bp_clickstream_tracking($query)
 	$data['matched_rule'] = $query->matched_rule;
 	$data['matched_query'] = $query->matched_query;
 	
-	$res = $wpdb->insert(CLICKSTREAM_TABLE,$data);
+	$res = $wpdb->insert('click_clickstream',$data);
 }
 
 add_action( 'parse_request','bp_clickstream_tracking');

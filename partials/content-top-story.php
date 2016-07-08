@@ -14,7 +14,7 @@
 								</header>
 								
 								<div class="entry-content">
-									<?php largo_excerpt($post, 5, false); ?>
+									<?php largo_excerpt($post, 5); ?>
 								
 									<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 									
