@@ -49,7 +49,7 @@ abstract class IntegrationCron {
 		global $wpdb;
 		
 		$querystr = $wpdb->prepare("select t.*, s.* from {$this->dbtable} t join frm_submission s on t.id = s.id where s.submit_timestamp > %d and s.submit_timestamp <= %d and validate = 1", $this->start_timestamp, $this->end_timestamp);		
-		$this->list = $wpdb->get_results($querystr, OBJECT);
+		$this->list = $wpdb->get_results($querystr, ARRAY_A);
 	}	
 
 	abstract public function run();
@@ -131,7 +131,7 @@ abstract class IntegrationCron {
 		// address fields
 	
 		$address_fields = array(
-			'address' => 'address'
+			'address' => 'address1'
 			,'city' => 'city'
 			,'state_province' => 'state'
 			,'country' => 'country_code'
@@ -151,6 +151,8 @@ abstract class IntegrationCron {
 			if (isset($rec[$f]) && !empty($rec[$f]))
 				$person[$f] = $rec[$f];
 		}
+		
+		return $person;
 	}
 
 	protected function makeDonation($rec,$person,$note=NULL) {
@@ -196,7 +198,7 @@ abstract class IntegrationCron {
 				'tag' => $tag
 			);
 				
-			$res = $api->put("/api/v1/people/{$id}/taggings",array('tagging' => $tagging));
+			$res = $this->nbapi()->put("/api/v1/people/{$id}/taggings",array('tagging' => $tagging));
 				
 			if (isset($res['code']))
 			{
@@ -210,13 +212,13 @@ abstract class IntegrationCron {
 		return $res;
 	}
 
-	protected function emailNewsletterSignup($rec,$person) {
+	protected function emailNewsletterSignup($rec, $person) {
 
 		$id = $person['id'];
 
 		if ($rec['email_signup'])
 		{		
-			$res = $api->post("/api/v1/lists/". EMAIL_NEWSLETTER_LIST_ID . "/people", array('people_ids'=> array($id)));
+			$res = $this->nbapi()->post("/api/v1/lists/". EMAIL_NEWSLETTER_LIST_ID . "/people", array('people_ids'=> array($id)));
 	
 			if (isset($res['code']))
 			{
@@ -239,6 +241,16 @@ abstract class IntegrationCron {
 			return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
 		else
 			return $phone;
+	}
+
+	protected function nbapi() {
+		
+		static $nbapi;
+		
+		if (!($nbapi instanceof NationbuilderAPI))
+			$nbapi = new NationbuilderAPI;
+		
+		return $nbapi;
 	}
 
 }

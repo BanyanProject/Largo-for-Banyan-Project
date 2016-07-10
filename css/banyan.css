@@ -1214,7 +1214,7 @@ li.related-story {
 	color: inherit; /* Largo override */
 }
 
-/* Sidebar & Widgets: Homepage  */
+/* 7.1 Sidebar & Widgets: Homepage  */
 
 #homepage-three-column #sidebar {
 	margin: 0;
@@ -1265,7 +1265,7 @@ li.related-story {
   margin: 1em 0;	
 }
 
-/* Forms */
+/* 8. Forms */
 
 legend {
   line-height: 1.6;
@@ -1309,13 +1309,13 @@ radio .label {
   color: #666;
 }
 
-/* Form: Search Form */
+/* 9.1 Form: Search Form */
 
 .form-search .searchbox {
 	width: 75%;
 }
 
-/* Community Events Calendar */
+/* 10 Community Events Calendar */
 
 .community-events-calendar .nav-tabs {
   margin: 1em 0;
@@ -1531,7 +1531,7 @@ radio .label {
   background: #0f2e3f;	
 }
 
-/* Advertisting */
+/* 11. Advertisting */
 .ad-outerwrap {
 	width: 100%;
 	position: relative;
@@ -1581,4 +1581,9 @@ radio .label {
 	max-height: 640px;
 	max-width: 950px;
 }
+
+/* 12. Temporary Bugfixes */
+/* Theme My Login Reset Password form */
+#pass2 { display: none; }
+
 

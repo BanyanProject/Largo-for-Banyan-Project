@@ -22,15 +22,13 @@ class EmailNewsletterCron extends IntegrationCron {
 	}
 	
 	protected function runNationBuilder() {
-		
-		$nbapi = new NationBuilderAPI;
-		
+				
 		foreach($this->list as $rec) {
 			
 			// Person Record
 			
 			$person = $this->makePerson($rec);
-			$res = $api->put('/api/v1/people/push',array('person' => $person));
+			$res = $this->nbapi()->put('/api/v1/people/push',array('person' => $person));
 			
 			if (isset($res['code']))
 			{
@@ -47,7 +45,7 @@ class EmailNewsletterCron extends IntegrationCron {
 			
 			// Tags
 			
-			$tags = array('form-email');
+			$tags = array('web-email');
 						
 			$this->emailNewsletterSignup($rec, $person);	
 		

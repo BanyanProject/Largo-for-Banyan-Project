@@ -22,15 +22,13 @@ class DonateCron extends IntegrationCron {
 	}
 	
 	protected function runNationBuilder() {
-		
-		$nbapi = new NationBuilderAPI;
-		
+				
 		foreach($this->list as $rec) {
 			
 			// Person Record
 			
 			$person = $this->makePerson($rec);
-			$res = $api->put('/api/v1/people/push',array('person' => $person));
+			$res = $this->nbapi()->put('/api/v1/people/push',array('person' => $person));
 			
 			if (isset($res['code']))
 			{
@@ -47,7 +45,7 @@ class DonateCron extends IntegrationCron {
 			// Donate Record
 			
 			$donation = $this->makeDonation($rec,$person);
-			$res = $api->post('/api/v1/donations', array('donation' => $donation));
+			$res = $this->nbapi()->post('/api/v1/donations', array('donation' => $donation));
 		
 			if (isset($res['code']))
 			{
@@ -62,10 +60,10 @@ class DonateCron extends IntegrationCron {
 			
 			// Tags and Email Signup
 			
-			$tags = array('form-donate');
+			$tags = array('web-donate');
 						
 			if ($rec['email_signup']) {
-				$tags[] = 'form-email';
+				$tags[] = 'web-email';
 				$this->emailNewsletterSignup($rec, $person);	
 			}
 		

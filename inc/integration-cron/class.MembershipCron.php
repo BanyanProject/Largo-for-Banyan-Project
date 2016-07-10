@@ -22,15 +22,13 @@ class MembershipCron extends IntegrationCron {
 	}
 	
 	protected function runNationBuilder() {
-		
-		$nbapi = new NationBuilderAPI;
-		
+				
 		foreach($this->list as $rec) {
 			
 			// Step 1: Find/Update Person Record
 			
 			$person = $this->makePerson($rec);
-			$res = $nbapi->put('/api/v1/people/push',array('person' => $person));
+			$res = $this->nbapi()->put('/api/v1/people/push',array('person' => $person));
 			
 			if (isset($res['code']))
 			{
@@ -47,7 +45,7 @@ class MembershipCron extends IntegrationCron {
 
 			// Step 2: Check for a Membership Record
 			$membership = NULL;
-			$memberships = $nbapi->get("/api/v1/people/{$id}/memberships");
+			$memberships = $this->nbapi()->get("/api/v1/people/{$id}/memberships");
 
 			foreach ($memberships['result']['results'] as $m) {
 				
@@ -76,7 +74,7 @@ class MembershipCron extends IntegrationCron {
 				if ($rec['recurring'] == 'non-recurring')				
 					$new['expires_on'] = $one_year;
 				
-				$res = $nbapi->post("/api/v1/people/{$id}/memberships",array("membership" => $new));
+				$res = $this->nbapi()->post("/api/v1/people/{$id}/memberships",array("membership" => $new));
 
 				if (isset($res['code']))
 				{
@@ -116,7 +114,7 @@ class MembershipCron extends IntegrationCron {
 						$update['expires_on'] = NULL;
 				}			
 
-				$res = $nbapi->put("/api/v1/people/{$id}/memberships",array("membership" => $update));
+				$res = $this->nbapi()->put("/api/v1/people/{$id}/memberships",array("membership" => $update));
 
 				if (isset($res['code']))
 				{
@@ -136,7 +134,7 @@ class MembershipCron extends IntegrationCron {
 			
 			$note = "For ". $membership['name'] ." Membership created at ". $membership['started_at'];
 			$donation = $this->makeDonation($rec,$person, $note);
-			$res = $nbapi->post('/api/v1/donations', array('donation' => $donation));
+			$res = $this->nbapi()->post('/api/v1/donations', array('donation' => $donation));
 		
 			if (isset($res['code']))
 			{
@@ -151,10 +149,10 @@ class MembershipCron extends IntegrationCron {
 			
 			// Step 5: Tags and Email Signup
 			
-			$tags = array('form-membership');
+			$tags = array('web-membership');
 			
 			if ($rec['email_signup']) {
-				$tags[] = 'form-email';
+				$tags[] = 'web-email';
 				$this->emailNewsletterSignup($rec, $person);	
 			}
 		

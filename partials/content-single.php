@@ -46,7 +46,7 @@ $top_term = largo_top_term(array('post' => get_the_ID(),'echo' => false,'link' =
 	<div class="wrap-sm-content">
 		<div class="row">
 			
-			<?php if (!in_array(get_the_title(),array('Log In', 'Register', 'Lost Password')) && !stristr(get_the_title(),'Thank You')) : ?>
+			<?php if (!in_array(get_the_title(),array('Log In', 'Register', 'Lost Password','Reset Password')) && !stristr(get_the_title(),'Thank You')) : ?>
 			<div class="col-md-sm">
 				<?php get_template_part( 'partials/social', 'vertical' ); ?>				
 			</div>

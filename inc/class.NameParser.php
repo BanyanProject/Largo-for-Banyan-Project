@@ -18,7 +18,7 @@ class NameParser {
 	{
 		$this->fullname = $fullname;
 
-		$this->pieces = split(' ',$this->fullname);
+		$this->pieces = explode(' ',$this->fullname);
 		$this->count = count($this->pieces);
 	
 		$this->parse();	

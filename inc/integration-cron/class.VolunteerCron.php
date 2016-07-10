@@ -1,8 +1,8 @@
 <?php
 
-class FoundingMembershipPledgeCron extends IntegrationCron {
+class VolunteerCron extends IntegrationCron {
 
-	protected $dbtable = 'frm_founding_membership_pledge';
+	protected $dbtable = 'frm_volunteer';
 
 	public function run()
 	{	
@@ -25,7 +25,7 @@ class FoundingMembershipPledgeCron extends IntegrationCron {
 				
 		foreach($this->list as $rec) {
 			
-			// Person Record
+			// Step 1: Find/Update Person Record
 			
 			$person = $this->makePerson($rec);
 			$res = $this->nbapi()->put('/api/v1/people/push',array('person' => $person));
@@ -43,10 +43,37 @@ class FoundingMembershipPledgeCron extends IntegrationCron {
 			
 			unset($res);
 			
-			// Tags
+			// Step 2: Tags and Email Signup
 			
-			$tags = array('web-founding-membership-pledge');
-						
+			$tags = array('web-volunteer');
+			
+			if ($rec['skills_journalism'])
+				$tags[] = 'web-skill-journalism';
+			
+			if ($rec['skills_organizing'])
+				$tags[] = 'web-skill-organizing';
+			
+			if ($rec['skills_graphic_design'])
+				$tags[] = 'web-skill-design';
+			
+			if ($rec['skills_photo'])
+				$tags[] = 'web-skill-photography';
+			
+			if ($rec['skills_video'])
+				$tags[] = 'web-skill-video';
+			
+			if ($rec['skills_web'])
+				$tags[] = 'web-skill-web-developer';
+			
+			if ($rec['interests_write'])
+				$tags[] = 'web-volunteer-write';
+			
+			if ($rec['interests_volunteer'])
+				$tags[] = 'web-volunteer-office';
+	
+			if ($rec['interests_event'])
+				$tags[] = 'web-volunteer-event';
+			
 			if ($rec['email_signup']) {
 				$tags[] = 'web-email';
 				$this->emailNewsletterSignup($rec, $person);	
@@ -57,6 +84,7 @@ class FoundingMembershipPledgeCron extends IntegrationCron {
 			unset($person, $tags);	
 		}
 	}
+
 	
 }
 
