@@ -64,8 +64,7 @@ label {
 	font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #555;
 }
-a
-, .widgettitle a {
+a {
 	color: #3982aa;
 }
 a:hover
@@ -78,8 +77,6 @@ h2 a, h2 a:hover
 , h4 a, h4 a:hover
 , h5 a, h5 a:hover
 , h6 a, h6 a:hover 
-, .widgettitle a, .widgettitle a:hover
-, .stories .widgettitle a, .stories .widgettitle a:hover
 , li.related-story a, li.related-story a:hover {
 	color: #1a435a;
 }
@@ -1212,13 +1209,17 @@ li.related-story {
 , #sidebar .widget h3.widgettitle 
 , #middlebar .widget h2.widgettitle
 , #middlebar .widget h3.widgettitle
-, .section-header h3.widgettitle {
+, .section-header h3.widgettitle
+, .widgettitle a, .widgettitle a:hover
+, .stories .widgettitle a, .stories .widgettitle a:hover
+{
 	font-family: "Patua One", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	text-transform: lowercase;
 	margin: 0.3em 0 1em;
 	color: #4e7b36;
 }
+
 #sidebar .widget h3.widgettitle
 , #middlebar .widget h3.widgettitle
 , .section-header h3.widgettitle {
