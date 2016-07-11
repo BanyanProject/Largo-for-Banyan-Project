@@ -167,7 +167,7 @@ blockquote p {
 , html.no-touch .navbar li > a:hover
 , .sticky-nav-holder-banyan .open > a
 , html.no-touch .sticky-nav-holder-banyan li > a:hover {
-	background-color: #469ac7;
+	background-color: #6daa4d;
 	color: white;
 }
 
@@ -191,7 +191,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 	left: 0;
 	right: 0;
 	z-index: 99998;
-	background-color: #3982aa;	/* largo */
+	background-color: #375925;	/* largo */
 }
 .sticky-nav-holder-banyan .sticky-nav-container {
   margin: 0 auto;
@@ -217,7 +217,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 
 /* Menu buttom for mobile */
 .navbar .btn-navbar {
-	background-color: #469ac7;
+	background-color: #6daa4d;
 	margin: 9px 10px 9px 0;		
 	border: 1px solid transparent;
 	border-radius: 4px;
@@ -229,7 +229,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 /
 /* Dropdown menu */
 .navbar .nav-shelf {
-	background-color: #469ac7;
+	background-color: #6daa4d;
 }
 .navbar .nav-shelf li:hover {
 	background-color: #50b2e7;		
@@ -280,7 +280,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 }
 
 .dropdown-menu {
-	background: #469ac7;	
+	background: #6daa4d;	
 }
 
 /* 2.1.2.1 Layout: Sticky Navbar: Logo */
@@ -359,7 +359,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 }
 .sticky-nav-holder-banyan #sticky-nav-search.show .form-search .input-append
 , .sticky-nav-holder-banyan #sticky-nav-search.show .toggle {
-	background-color: #469ac7;
+	background-color: #6daa4d;
 	visibility: visible;
 }
 .sticky-nav-holder-banyan .form-search .input-append {
@@ -439,7 +439,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 
 .homepage-header-wrapper {
   padding-top: 53px;
-  background: #92aec8;
+  background: #3982aa;
   margin-bottom: 2em;
 }
 
@@ -526,7 +526,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 /* 2.4 Layout: Footer */
 
 .footer-bg {
-	background: #6a7f92;
+	background: #51b2e8;
 }
 #site-footer {
 	color: white;
