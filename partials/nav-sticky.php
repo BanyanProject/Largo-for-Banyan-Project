@@ -62,8 +62,7 @@
 							<ul>
 								<li class="home-logo">
 									<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-										<img src="/wp-content/themes/Largo-for-Banyan-Project/img/logo-knockout-01.png">
-									</a>
+									<img src="/wp-content/uploads/2015/10/sticky-header-logo-275.png"></a>
 								</li>
 
 							</ul>
@@ -81,7 +80,7 @@
 						<ul class="nav">
 							<li class="<?php echo (of_get_option('sticky_header_logo') == '' ? 'home-link' : 'home-logo' ) ?>">
 								<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-									<img src="/wp-content/themes/Largo-for-Banyan-Project/img/logo-knockout-01.png">
+									<img src="/wp-content/uploads/2015/10/sticky-header-logo-275.png"></a>
 								</a>
 							</li>
 							<?php
