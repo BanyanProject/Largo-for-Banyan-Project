@@ -44,7 +44,7 @@ body {
 }
 h1 {
 	font-family: "Patua One", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #1a435a;
+	color: #333;
 	font-weight: normal;
 }
 h1.entry-title {
@@ -58,33 +58,21 @@ h2
 , h6
 , legend {
 	font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #1a435a;
+	color: #444;
 }
 label {
 	font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #555;
 }
 a
-, .widgettitle a {
+, .widgettitle a
+, .stories h3.widgettitle  {
 	color: #3982aa;
 }
 a:hover
-{
+, .widgettitle a:hover {
 	color: #3982aa;
 }
-
-h2 a, h2 a:hover
-, h3 a, h3 a:hover
-, h4 a, h4 a:hover
-, h5 a, h5 a:hover
-, h6 a, h6 a:hover 
-, .widgettitle a, .widgettitle a:hover
-, .stories .widgettitle a, .stories .widgettitle a:hover
-, li.related-story a, li.related-story a:hover {
-	color: #1a435a;
-}
-
-
 a.disabled {
   opacity: 0.5;
   pointer-events: none;
@@ -109,9 +97,6 @@ blockquote p {
 	font-size: 20px;
 	margin: 0 0 1em 0;
 	line-height: 1.65;
-}
--webkit-transition: all 150ms ease;
-	transition: all 150ms ease;
 }
 
 /* 2. Layout */
@@ -541,7 +526,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 /* 2.4 Layout: Footer */
 
 .footer-bg {
-	background: #3982aa;
+	background: #51b2e8;
 }
 #site-footer {
 	color: white;
@@ -1189,7 +1174,7 @@ li.related-story {
 , #middlebar .widget {
 	margin: 36px 0 0 0;
 	padding: 0;
-	border-top: 1px solid #51b2e8;
+	border-top: 2px solid #c7edff;
 }
 
 @media (min-width: 768px) {
@@ -1217,7 +1202,7 @@ li.related-story {
 	font-weight: normal;
 	text-transform: lowercase;
 	margin: 0.3em 0 1em;
-	color: #4e7b36;
+	color: #3982aa;
 }
 #sidebar .widget h3.widgettitle
 , #middlebar .widget h3.widgettitle
@@ -1322,26 +1307,6 @@ radio .label {
   margin: 0.3em 0;
   font-size: 90%;
   color: #666;
-}
-.btn {
-  text-transform: uppercase;	
-  border-radius: 3px;
-  cursor: pointer;	
-  border: 0 none;
-  box-shadow: 0 1px 0 #999, 0 1px 0 #999, 0 2px 2px rgba(0,0,0,0.6);
-}	
-.btn-primary {
-  background-color: #3982aa;
-  border: 0 none;
-}
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active
-, .btn-primary:active:hover, .btn-primary:active:focus {
-    background-color: #3982aa;
-	box-shadow: 0 1px 0 #999, 0 1px 0 #999, 0 1px 1px rgba(0,0,0,0.6);
-	-webkit-transform: translateY(1px);
-	transform: translateY(1px);
-	-webkit-animation: none;
-	animation: none;	
 }
 
 /* 9.1 Form: Search Form */
