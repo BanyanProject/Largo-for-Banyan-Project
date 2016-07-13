@@ -65,7 +65,7 @@ class Banyan_Project_Recent_Blog_Posts_Widget extends WP_Widget {
 	
 			        		<h4 class="entry-title"><a href="<?php the_permalink(); ?>" ><?php the_title(); ?></a></h4>	        		
 		        
-		        			<?php largo_excerpt(get_the_ID(), 1, false, '', true); ?>
+		        			<?php largo_excerpt(get_the_ID(), 1); ?>
 	
 							<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 	        			
