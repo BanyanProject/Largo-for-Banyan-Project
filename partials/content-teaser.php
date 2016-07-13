@@ -14,7 +14,7 @@
 	 		<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute( array( 'before' => __( 'Permalink to', 'largo' ) . ' ' ) )?>" rel="bookmark"><?php the_title(); ?></a>
 	 	</h2>
 
-		<?php largo_excerpt( $post, 3); ?>
+		<?php largo_excerpt( $post, 2); ?>
 
 		<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 

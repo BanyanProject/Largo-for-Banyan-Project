@@ -100,13 +100,25 @@ function register_custom_homepage_layouts() {
 	unregister_homepage_layout('LegacyThreeColumn');	
 	
 }
+
 add_action('init', 'register_custom_homepage_layouts', 100);
+
+function register_prominence($terms) {
+
+	$terms[] = array(
+		'name' => __('Top Story', 'largo'),
+		'description' => __('The lead story on the homepage.', 'largo'),
+		'slug' => 'top-story'
+	);
+		
+	return $terms;
+}
+
+add_filter('largo_prominence_terms','register_prominence', 10, 1);
 
 /* Required Plugins Alert */
 
-add_action('admin_notices', 'showAdminMessages');
-
-function showAdminMessages()
+function bp_show_admin_messages()
 {
 	$plugin_messages = array();
 
@@ -143,6 +155,7 @@ function showAdminMessages()
 	}
 }
 
+add_action('admin_notices', 'bp_show_admin_messages');
  
 /* Custom URL type for events */
 

@@ -10,7 +10,7 @@ class HomepageThreeColumn extends Homepage {
 			'template' => get_stylesheet_directory() . '/homepages/templates/homepage-three-column.php',
 			'prominenceTerms' 	=> array(
 				array(
-					'name' 			=> __( 'Homepage Top Story', 'largo' ),
+					'name' 			=> __( 'Top Story', 'largo' ),
 					'description' 	=> __( 'Add this label to a post to make it the top story on the homepage', 'largo' ),
 					'slug' 			=> 'top-story'
 				)

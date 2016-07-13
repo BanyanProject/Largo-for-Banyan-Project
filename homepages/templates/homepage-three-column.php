@@ -33,7 +33,7 @@ $homefeatured = largo_get_featured_posts(array(
 			'terms' => array('news','blog')
 		)
 	),
-	'showposts' => 9
+	'showposts' => 6
 ));
 
 

@@ -303,7 +303,7 @@ body.admin-bar .sticky-nav-holder-banyan {
 .navbar li.home-logo > a img {
 	display: block;
 	width: auto;
-	padding: 13px 0 12px; /* largo: .navbar li.home-icon > a img */
+	padding: 15px 0; /* largo: .navbar li.home-icon > a img */
 }
 
 @media (max-width: 767px) {	
@@ -1130,6 +1130,14 @@ li.related-story {
 #category-featured {
 	padding-top: 0.5em;	
 }
+#category-featured.stories .primary-featured-post .entry-content p {  
+	font-size: 18px;
+	margin: 1em 0;	
+}
+.archive-background p {
+  font-size: inherit;
+  margin-bottom: inherit;
+}
 .archive-background .related-topics {
 	font-family: inherit;
 }
@@ -1199,7 +1207,7 @@ li.related-story {
 
 .section-header {
 	padding: 0;
-	border-top: 2px solid #c7edff;
+	border-top: 1px solid #51b2e8;
 }
 
 #sidebar .widget h2.widgettitle 

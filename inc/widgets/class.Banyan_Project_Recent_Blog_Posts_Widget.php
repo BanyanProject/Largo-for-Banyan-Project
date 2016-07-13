@@ -17,6 +17,8 @@ class Banyan_Project_Recent_Blog_Posts_Widget extends WP_Widget {
 	}
 	
 	public function widget( $args, $instance ) {
+
+		global $shown_ids;
 		
 		$limit = $instance['listings'];
 				
@@ -46,25 +48,32 @@ class Banyan_Project_Recent_Blog_Posts_Widget extends WP_Widget {
 		
         <div id="wrap-related-articles" class="clearfix">
                                     
-	 		<?php while ( $posts->have_posts() ) { 
-	 			$posts->the_post(); ?>
+	 		<?php while ( $posts->have_posts() ) {
 	 			
-	        	<article class="post-type-news">
-		        	<div class="entry-content clearfix">
-		        		     		
-	        			<?php echo(get_avatar(get_the_author_meta('ID'),'thumbnail',array('class' => 'alignleft'))); ?>
+	 			$posts->the_post(); 
+	 			
+	 			if (!in_array(get_the_ID(),$shown_ids)) {
+				
+	 				?>
+	 			
+		        	<article class="post-type-news">
+			        	<div class="entry-content clearfix">
+			        		     		
+		        			<?php echo(get_avatar(get_the_author_meta('ID'),'thumbnail',array('class' => 'alignleft'))); ?>
+		        			
+			        		<h5 class="top-tag"><?php largo_top_term(); ?></h5>
+	
+			        		<h4 class="entry-title"><a href="<?php the_permalink(); ?>" ><?php the_title(); ?></a></h4>	        		
+		        
+		        			<?php largo_excerpt(get_the_ID(), 1, false, '', true); ?>
+	
+							<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
 	        			
-		        		<h5 class="top-tag"><?php largo_top_term(); ?></h5>
-
-		        		<h4 class="entry-title"><a href="<?php the_permalink(); ?>" ><?php the_title(); ?></a></h4>	        		
-	        
-	        			<?php largo_excerpt(get_the_ID(), 1, false, '', true); ?>
-
-						<?php get_template_part( 'partials/social', 'horizontal-small' ); ?>
-        			
-		        	</div>
-	        	</article>	
-	        <?php } ?>
+			        	</div>
+		        	</article>		        	
+		        	
+	      		<?php }
+			} ?>
 	      
 	      <?php else : ?>
 	      
