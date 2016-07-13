@@ -92,6 +92,10 @@ function register_custom_homepage_layouts() {
 	include_once __DIR__ . '/homepages/layouts/HomepageLead.php';
 	register_homepage_layout('HomepageLead');
 
+	include_once __DIR__ . '/homepages/layouts/HomepageBanyan.php';
+	register_homepage_layout('HomepageBanyan');
+
+
 	unregister_homepage_layout('HomepageBlog');
 	unregister_homepage_layout('HomepageSingle');
 	unregister_homepage_layout('HomepageSingleWithFeatured');
