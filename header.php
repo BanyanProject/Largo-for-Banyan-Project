@@ -101,7 +101,7 @@
 
 	<div id="page" class="hfeed clearfix">
 
-		<?php get_template_part('partials/header-ad-zone'); ?>
+		<?php //get_template_part('partials/header-ad-zone'); ?>
 
 		<?php
 			/**

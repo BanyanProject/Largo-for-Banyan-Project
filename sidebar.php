@@ -12,7 +12,7 @@ do_action('largo_before_sidebar'); ?>
 	<div class="widget-area <?php echo $showey_hidey_class ?>" role="complementary">
 		
 		<?php
-			get_template_part('partials/sidebar-ad-zone');
+			//get_template_part('partials/sidebar-ad-zone');
 		
 			do_action('largo_before_sidebar_widgets');
 
