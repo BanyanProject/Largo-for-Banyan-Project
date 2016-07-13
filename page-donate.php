@@ -72,7 +72,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	
 	if ($form->isValid() && $form->isApproved()) {
 		
-		$form->adminMsg('affiliate-admin-donate');
+		$form->adminMsg('admin-donate');
 		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setTo(of_get_option('ed_name'),of_get_option('ed_email'));
 		$form->adminMsg()->setTo(of_get_option('admin_name'),of_get_option('admin_email'));
@@ -109,7 +109,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$form->adminMsg()->send();	
 					
-		$form->userMsg('affiliate-user-donate');
+		$form->userMsg('user-donate');
 		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("Thank you for your generous donation!");

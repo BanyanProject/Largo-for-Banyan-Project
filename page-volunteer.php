@@ -76,7 +76,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			}	
 		}
 		
-		$form->adminMsg('affiliate-admin-volunteer');
+		$form->adminMsg('admin-volunteer');
 		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setTo(of_get_option('ed_name'), of_get_option('ed_email'));
 		$form->adminMsg()->setTo(of_get_option('editor_name'), of_get_option('editor_email'));
@@ -100,7 +100,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 				
 		$form->adminMsg()->send();	
 
-		$form->userMsg('affiliate-user-volunteer');
+		$form->userMsg('user-volunteer');
 		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
 		$form->userMsg()->setSubject("Thank you for volunteering!");
@@ -123,11 +123,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			
 	if ($form->isValid()) {
 		
-		if (!is_user_logged_in() && !get_user_by_email($form->outputValue('email')))
-			header("Location: ". home_url("/register/?redirect=volunteer"));
-		else
-			header("Location: ". home_url("/volunteer/thank-you"));
-		
+		header("Location: ". home_url("/volunteer/thank-you"));	
 		exit;
 
 	} else
@@ -614,7 +610,7 @@ get_header();
 							<div class="checkbox">
 								<label for="interests_write">
 									<input type="checkbox" name="interests_write" value="1" <?php if (esc_attr($_POST['interests_write']) == 1) echo('checked'); ?> >
-									I am interested in reporting or editing for <?php bloginfo('name'); ?>.
+									I am interested in reporting or editing for <?php bloginfo('name'); ?> or an affiliated news co-op.
 								</label>
 							</div>
 

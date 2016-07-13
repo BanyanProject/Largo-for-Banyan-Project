@@ -37,8 +37,6 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->validate('email','required');
 		$form->validate('email','stringLength',array('maxlength' => 60));
 		$form->validate('email','email');
-		$form->validate('type','required');
-		$form->validate('type','allowedValues',array('advertising','news-topic','contact-editor'));
 		$form->validate('message','required');
 		$form->validate('message','stringLength',array('maxlength' => 5000));
 		$form->validate('email_signup','boolean');
@@ -48,28 +46,10 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	
 	if ($form->isValid()) {
 		
-		$form->adminMsg('affiliate-admin-contact');
+		$form->adminMsg('admin-contact');
 		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setReplyTo($form->outputValue('name'), $form->outputValue('email'));
 		
-		switch ($form->outputValue('type')) {
-			
-			case 'advertising' :
-				$form->adminMsg()->setSubject('Advertising Inquiry');
-				$form->adminMsg()->setTo(of_get_option('ed_name'),of_get_option('ed_email'));
-				$form->adminMsg()->setTo(of_get_option('admin_name'),of_get_option('admin_email'));
-				break;
-				
-			case 'news-topic' :
-				$form->adminMsg()->setSubject('News Coverage Request');
-				$form->adminMsg()->setTo(of_get_option('editor_name'),of_get_option('editor_email'));
-				break;
-				
-			case 'contact-editor' :
-				$form->adminMsg()->setSubject('Private Note to the Editor');
-				$form->adminMsg()->setTo(of_get_option('editor_name'),of_get_option('editor_email'));
-				break;
-		}
 		
 		$form->adminMsg()->setVariable('affiliate_name',get_bloginfo('name'));
 		$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
@@ -78,28 +58,9 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		$form->adminMsg()->setContentMain($form->outputValue('message'));
 		$form->adminMsg()->send();
 		
-		$form->userMsg('affiliate-user-contact');
+		$form->userMsg('user-contact');
 		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option());
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
-
-		switch ($form->outputValue('type')) {
-			
-			case 'advertising' :
-				$form->userMsg()->setSubject("Thanks! We've received your advertising inquiry.");
-				$form->userMsg()->setVariable('message_type','advertising inquiry');
-				break;
-				
-			case 'news-topic' :
-				$form->userMsg()->setSubject("Thanks! We've received your suggestion.");
-				$form->userMsg()->setVariable('message_type','suggestion for news coverage');
-				break;
-				
-			case 'contact-editor' :
-				$form->userMsg()->setSubject("Thanks! Your note has been sent to the editor.");
-				$form->userMsg()->setVariable('message_type','private note to the editor');
-				break;
-		}
-		
 		$form->userMsg()->setVariable('affiliate_name',get_bloginfo('name'));
 		$form->userMsg()->setContentMain($form->outputValue('message'));
 		$form->userMsg()->send();
@@ -167,19 +128,7 @@ get_header();
 							    <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
 							</div>
 						</div>
-						
-						<div class="form-group row clearfix">
-							<div class="col-sm-8">
-	 							<label for="type">Type of Message: <span class="required" title="This field is required.">*</span></label>
-	 							<select name="type" >
-									<option value=""></option>
-									<option value="advertising" <?php if (esc_attr($_POST['type']) == 'advertising') echo 'selected'; ?> >Inquire about advertising</option>
-									<option value="news-topic" <?php if (esc_attr($_POST['type']) == 'news-topic') echo 'selected'; ?> >Suggest a topic for news coverage</option>
-									<option value="contact-editor" <?php if (esc_attr($_POST['type']) == 'contact-editor') echo 'selected'; ?> >Write a private note to the editor</option>
-								</select>
-							</div>						
-						</div>
-						
+
 						<div class="form-group row clearfix">
 							<div class="col-sm-8">
 							    <label for="message">Message: <span class="required" title="This field is required.">*</span></label>

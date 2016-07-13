@@ -28,7 +28,7 @@ function bp_clickstream_tracking($query)
 			$data['nationbuilder_slug'] = NB_SLUG;
 		
 		$data['nationbuilder_id'] = nb_get_id($data['user_id']);
-		$data['is_member'] = nb_is_member($data['user_id']);
+		//$data['is_member'] = nb_is_member($data['user_id']);
 	}
 
 	// google analytics fields

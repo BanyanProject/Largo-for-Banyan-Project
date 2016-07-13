@@ -69,7 +69,7 @@ abstract class FormSubmission {
 				$this->output[SUBMISSION_TABLE]['nationbuilder_slug'] = NB_SLUG;
 		
 			$this->output[SUBMISSION_TABLE]['nationbuilder_id'] = nb_get_user_meta(get_current_user_id(), 'id');
-			$this->output[SUBMISSION_TABLE]['is_member'] = nb_is_member();
+			//$this->output[SUBMISSION_TABLE]['is_member'] = nb_is_member();
 		}
 		
 		// google analytics fields
