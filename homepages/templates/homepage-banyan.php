@@ -1,5 +1,3 @@
-<?php
-
 
 <div id="homepage-three-column">
 	
@@ -54,7 +52,6 @@
 			</div>
 			
 		</div>
-		
 			
 		<?php get_sidebar(); ?>
 					
