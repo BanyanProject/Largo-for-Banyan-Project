@@ -15,7 +15,7 @@
 
 						<ul id="header-extras">
 
-							<li id="sticky-nav-search">
+							<li id="sticky-nav-search" class="hidden-xs">
 								<a href="#" class="toggle">
 									<i class="icon-search" title="<?php esc_attr_e('Search', 'largo'); ?>" role="button"></i>
 								</a>
@@ -31,7 +31,7 @@
 							</li>
 
 							<?php if (!is_user_logged_in()) : ?>
-								<li>
+								<li class="hidden-xs">
 									<a href="/login">Log In</a>
 								</li>						
 							<?php endif; ?>
@@ -39,11 +39,19 @@
 							<?php
 							if ( !nb_is_member() && of_get_option( 'show_donate_button') ) {
 								if ($donate_link = of_get_option('donate_link')) { ?>
-								<li class="donate">
+
+								<li class="donate hidden-xs">
 									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">
-										<span><i class="icon-heart"></i><?php echo esc_html(of_get_option('donate_button_text')); ?></span>
+										<span ><i class="icon-heart"></i><?php echo esc_html(of_get_option('donate_button_text')); ?></span>
 									</a>
-								</li><?php
+								</li>
+								<li class="donate visible-xs">
+									<a class="donate-link" href="<?php echo esc_url($donate_link); ?>">
+										<span ><i class="icon-heart"></i><?php echo esc_html('Join'); ?></span>
+									</a>
+								</li>
+								
+								<?php
 								}
 							} ?>
 						</ul>
@@ -69,11 +77,11 @@
 					</div>
 					<div class="nav-shelf">
 
-						<div class="wrap-navbar-twitter hidden-sm hidden-xs">
+						<div class="wrap-navbar-twitter visible-lg">
 							<a href="<?php echo(esc_attr(of_get_option('twitter_link'))); ?>" class="twitter-follow-button" data-show-count="false">Follow <?php echo(bp_get_twitter_username('@')); ?></a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 						</div>
 						
-						<div class="wrap-navbar-facebook hidden-sm hidden-xs">
+						<div class="wrap-navbar-facebook visible-lg">
 							<div class="fb-like" data-href="<?php echo(esc_attr(of_get_option('facebook_link'))); ?>" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
 						</div>
 
