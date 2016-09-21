@@ -263,7 +263,7 @@ get_header();
 		 							<div class="radio">
 		 								<label> 									
 		 									<input type="radio" name="type" value="125" id="type-125" <?php if (esc_attr($_POST['type']) == '125') echo 'checked'; ?> >
-		 									<span id="125-amount">$125/year</span> <i>Leaduing Membership</i>
+		 									<span id="125-amount">$125/year</span> <i>Leading Membership</i>
 		 								</label>
 		 							</div>
 		 							<div class="radio">
