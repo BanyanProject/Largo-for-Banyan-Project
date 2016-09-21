@@ -208,14 +208,18 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	
 	if ($form->isValid()) {
 		
-		global $display_name, $user_email, $current_user;
- 		get_currentuserinfo();		
+		global $display_name, $user_email;
+		$user = wp_get_current_user();
+		
+		
+		$display_name = $user->display_name;
+		$user_email = $user->user_email;
 		
 		$form->adminMsg('affiliate-admin-submit-an-event');
 		
-		$form->adminMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setReplyTo($display_name,$user_email);
-		$form->adminMsg()->setTo(DEFAULT_TO_NAME,DEFAULT_TO_EMAIL);
+		$form->adminMsg()->setTo(of_get_option('editor_name'), of_get_option('editor_email'));
 		$form->adminMsg()->setSubject('Event Submission');
 	
 		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));
@@ -225,19 +229,32 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			
 		$form->adminMsg()->setVariable('event_name',$form->outputValue('post_title'));
 		$form->adminMsg()->setContentMain($form->outputValue('post_content'));
-		$form->adminMsg()->setVariable('event_url',$form->outputValue('event_url'));
-		$form->adminMsg()->setVariable('event_email',$form->outputValue('event_email'));
-		$form->adminMsg()->setVariable('event_cost',$form->outputValue('event_cost'));
+		
+		if ($form->outputValue('event_url'))
+			$form->adminMsg()->setVariable('event_url',$form->outputValue('event_url'));
+		else
+			$form->adminMsg()->setVariable('event_url', 'Left Blank');
+		
+		if ($form->outputValue('event_email'))
+			$form->adminMsg()->setVariable('event_email',$form->outputValue('event_email'));
+		else 
+			$form->adminMsg()->setVariable('event_email','Left Blank');
 
+		if ($form->outputValue('event_cost'))
+			$form->adminMsg()->setVariable('event_cost',$form->outputValue('event_cost'));
+		else
+			$form->adminMsg()->setVariable('event_cost','Left Blank');
+						
 		if ($form->outputValue('event_all_day') == 1) 
 			$form->adminMsg()->setVariable('event_all_day','Yes');
 		else
 			$form->adminMsg()->setVariable('event_all_day','No');
 		
 		$form->adminMsg()->setVariable('start_date',$form->outputValue('start_date'));
-		$form->adminMsg()->setVariable('start_time',$form->outputValue('start_time'));
-		//$form->adminMsg()->setVariable('end_date',$form->outputValue('end_date'));
-		//$form->adminMsg()->setVariable('end_time',$form->outputValue('end_time'));
+		if ($form->outputValue('end_date') != NULL) 
+			$form->adminMsg()->setVariable('end_date',$form->outputValue('end_date'));
+		else
+			$form->adminMsg()->setVariable('end_date', 'None');
 		
 		if ($form->outputValue('event_recurrence') == 'none') {
 			$form->adminMsg()->setVariable('event_recurrence','No');
@@ -247,8 +264,13 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			$form->adminMsg()->setVariable('recurs_until',$form->outputValue('recurs_until'));
 		}
 				
-		$form->adminMsg()->setVariable('location_name',$form->outputValue('location_name'));
-		$form->adminMsg()->setVariable('address',$form->outputValue('address'));
+		$form->adminMsg()->setVariable('location_title',$form->outputValue('location_title'));
+		
+		if ($form->outputValue('address'))
+			$form->adminMsg()->setVariable('address',$form->outputValue('address'));
+		else
+			$form->adminMsg()->setVariable('address','Left Blank');
+		
 		$form->adminMsg()->setVariable('city',$form->outputValue('city'));
 		$form->adminMsg()->setVariable('state_province',$form->outputValue('state_province'));
 
@@ -265,7 +287,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$form->userMsg('affiliate-user-submit-an-event');
 
-		$form->userMsg()->setFrom(DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL);
+		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($display_name, $user_email);
 		$form->userMsg()->setSubject("Thanks! We've received your event submission.");
 		
@@ -273,9 +295,21 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 
 		$form->userMsg()->setVariable('event_name',$form->outputValue('post_title'));
 		$form->userMsg()->setContentMain($form->outputValue('post_content'));
-		$form->userMsg()->setVariable('event_url',$form->outputValue('event_url'));
-		$form->userMsg()->setVariable('event_email',$form->outputValue('event_email'));
-		$form->userMsg()->setVariable('event_cost',$form->outputValue('event_cost'));
+		
+		if ($form->outputValue('event_url'))
+			$form->userMsg()->setVariable('event_url',$form->outputValue('event_url'));
+		else
+			$form->userMsg()->setVariable('event_url','Left Blank');
+		
+		if ($form->outputValue('event_email'))
+			$form->userMsg()->setVariable('event_email',$form->outputValue('event_email'));
+		else
+			$form->userMsg()->setVariable('event_email','Left Blank');
+			
+		if ($form->outputValue('event_cost'))
+			$form->userMsg()->setVariable('event_cost',$form->outputValue('event_cost'));
+		else
+			$form->userMsg()->setVariable('event_cost','Left Blank');
 
 		if ($form->outputValue('event_all_day') == 1) 
 			$form->userMsg()->setVariable('event_all_day','Yes');
@@ -283,9 +317,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			$form->userMsg()->setVariable('event_all_day','No');
 		
 		$form->userMsg()->setVariable('start_date',$form->outputValue('start_date'));
-		$form->userMsg()->setVariable('start_time',$form->outputValue('start_time'));
-		//$form->userMsg()->setVariable('end_date',$form->outputValue('end_date'));
-		//$form->userMsg()->setVariable('end_time',$form->outputValue('end_time'));
+		$form->userMsg()->setVariable('end_date',$form->outputValue('end_date'));
 		
 		if ($form->outputValue('event_recurrence') == 'none') {
 			$form->userMsg()->setVariable('event_recurrence','No');
@@ -295,8 +327,13 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 			$form->userMsg()->setVariable('recurs_until',$form->outputValue('recurs_until'));
 		}
 				
-		$form->userMsg()->setVariable('location_name',$form->outputValue('location_name'));
-		$form->userMsg()->setVariable('address',$form->outputValue('address'));
+		$form->userMsg()->setVariable('location_title',$form->outputValue('location_title'));
+
+		if ($form->outputValue('address'))
+			$form->userMsg()->setVariable('address',$form->outputValue('address'));
+		else
+			$form->userMsg()->setVariable('address','Left Blank');
+		
 		$form->userMsg()->setVariable('city',$form->outputValue('city'));
 		$form->userMsg()->setVariable('state_province',$form->outputValue('state_province'));
 
