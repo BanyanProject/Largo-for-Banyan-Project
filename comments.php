@@ -28,7 +28,7 @@
 
 	<?php if (is_user_logged_in()) : ?>
 		
-		<p>In keeping with <a href="/about-us/"><?php bloginfo('name'); ?>'s value proposition</a>, please make sure your comments are relevant and respectful, and refrain from making personal attacks.</p>
+		<p>In keeping with <a href="/about/"><?php bloginfo('name'); ?>'s value proposition</a>, please make sure your comments are relevant and respectful, and refrain from making personal attacks.</p>
 		
 		<?php bp_comment_form($comment_args); ?>
 		
