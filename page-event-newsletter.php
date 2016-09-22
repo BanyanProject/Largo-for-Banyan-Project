@@ -1,29 +1,29 @@
 <?php
 /**
- * Description: Email Newsletter Form
+ * Description: Event Newsletter Form
  */
   
 require_once('inc/class.FormSubmission.php');
  
 wp_enqueue_script(
-	'email-newsletter',
-	'/wp-content/themes/Largo-for-Banyan-Project/js/email-newsletter.js',
+	'event-newsletter',
+	'/wp-content/themes/Largo-for-Banyan-Project/js/event-newsletter.js',
 	array('jquery'),
 	'0.1',
 	true
 );
 
   
-class EmailNewsletterForm extends FormSubmission {
+class EventNewsletterForm extends FormSubmission {
 
-	protected $dbtable = 'frm_email_newsletter';	
+	protected $dbtable = 'frm_event_newsletter';	
 }
 
 
 // has user submitted form
 if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
-	$form = new EmailNewsletterForm;
+	$form = new EventNewsletterForm;
 	
 	// anti-spam token
 	if ($form->requiresToken()) {
@@ -43,12 +43,12 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	
 	if ($form->isValid()) {
 		
-		$form->adminMsg('affiliate-admin-email-newsletter');
+		$form->adminMsg('affiliate-admin-event-newsletter');
 		$form->adminMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->adminMsg()->setTo(of_get_option('admin_name'), of_get_option('admin_email'));
-		$form->adminMsg()->setSubject('Email Newsletter Sign-up Notification');
+		$form->adminMsg()->setSubject('Event Newsletter Sign-up Notification');
 		$form->adminMsg()->setVariable('affiliate_name', get_bloginfo('name'));	
-			
+		
 		if ($form->outputValue('full_name'))
 				$form->adminMsg()->setVariable('full_name',$form->outputValue('full_name'));
 		else
@@ -60,10 +60,10 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 		
 		$name = get_bloginfo('name');
 		
-		$form->userMsg('affiliate-user-email-newsletter');
+		$form->userMsg('affiliate-user-event-newsletter');
 		$form->userMsg()->setFrom(get_bloginfo('name'), of_get_option('from_email'));
 		$form->userMsg()->setTo($form->outputValue('full_name'), $form->outputValue('email'));
-		$form->userMsg()->setSubject("You're subscribed to {$name}'s email newsletter");
+		$form->userMsg()->setSubject("You're subscribed to {$name}'s event newsletter");
 		$form->userMsg()->setVariable('affiliate_name', get_bloginfo('name'));
 		$form->userMsg()->setVariable('user_email',$form->outputValue('email'));		
 		$form->userMsg()->setVariable('unsubscribe_link',UNSUBSCRIBE_LINK);		
@@ -75,7 +75,7 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	$form->persist();
 	
 	if ($form->isValid()) {
-		header("Location: ". home_url("/email-newsletter/thank-you"));
+		header("Location: ". home_url("/event-newsletter/thank-you"));
 		exit;
 	} else
 		$response = $form->formatErrorMsgHtml();
@@ -117,7 +117,7 @@ get_header();
 					</div>
 					<?php endif; ?>
 										
-					<form action="<?php the_permalink(); ?>" method="post" id="email-newsletter-form">
+					<form action="<?php the_permalink(); ?>" method="post" id="event-newsletter-form">
 						
 						<div class="form-group row clearfix">
 							<div class="col-sm-8">

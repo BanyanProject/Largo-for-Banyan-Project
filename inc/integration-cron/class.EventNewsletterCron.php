@@ -1,8 +1,8 @@
 <?php
 
-class EmailNewsletterCron extends IntegrationCron {
+class EventNewsletterCron extends IntegrationCron {
 
-	protected $dbtable = 'frm_email_newsletter';
+	protected $dbtable = 'frm_event_newsletter';
 
 	public function run()
 	{	
@@ -47,14 +47,31 @@ class EmailNewsletterCron extends IntegrationCron {
 			
 			$tags = array('web-email');
 						
-			$rec['email_signup'] = true;		
-			$this->emailNewsletterSignup($rec, $person);	
+			$this->eventNewsletterSignup($rec, $person);	
 		
 			$this->tags($tags, $rec, $person);
 		
 			unset($person, $tags);	
 		}
-	}	
+	}
+	
+	protected function eventNewsletterSignup($rec, $person) {
+
+		$id = $person['id'];
+
+			$res = $this->nbapi()->post("/api/v1/lists/". EVENT_NEWSLETTER_LIST_ID . "/people", array('people_ids'=> array($id)));
+	
+			if (isset($res['code']))
+			{
+				$this->errors++; 
+				$this->log .= $rec['email']."\tlists/". EVENT_NEWSLETTER_LIST_ID . "/people\terror ".$res['code']."\n";
+			} else {						
+				$this->log .= $rec['email']."\tlists/". EVENT_NEWSLETTER_LIST_ID . "/people\tsuccess\n";
+			}
+
+		return $res;	
+	}
+	
 }
 
 ?>
