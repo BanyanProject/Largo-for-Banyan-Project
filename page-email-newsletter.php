@@ -69,9 +69,6 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 
 	$form->persist();
 	
-	if (!$form->isValid())
-		$response = $form->formatErrorMsgHtml();
-		
 	if ($form->isValid()) {
 		header("Location: ". home_url("/email-newsletter/thank-you"));
 		exit;
