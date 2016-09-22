@@ -39,12 +39,14 @@ class Banyan_Project_Email_Signup_Widget extends WP_Widget {
 								
 		?>
 		
-		<form class="form-inline">
-			  <div class="form-group">
-			    <label class="sr-only" for="exampleInputEmail3">Enter your email address</label>
-			    <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Your email address">
-			  </div>
-			  <button type="submit" class="btn btn-default">I'm in!</button>
+		<form class="form-inline" method="post" action="/email-newsletter/">
+			<div class="form-group">
+				<label class="sr-only">Enter your email address</label>
+				<input name="email" type="email" class="form-control" placeholder="Your email address">
+			</div>
+			<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
+			<input type="hidden" name="submitted" value="1">
+			<button type="submit" class="btn btn-default">I'm in!</button>
 		</form>
 			
 		<?php

@@ -33,7 +33,6 @@ if (is_array($_POST) && $_POST['submitted'] === '1') {
 	if ($form->isValid()) {
 		
 		// validation
-		$form->validate('full_name','required');
 		$form->validate('full_name','stringLength',array('maxlength' => 60));
 		$form->validate('email','required');
 		$form->validate('email','stringLength',array('maxlength' => 60));
