@@ -45,7 +45,7 @@ class EventNewsletterCron extends IntegrationCron {
 			
 			// Tags
 			
-			$tags = array('web-email');
+			$tags = array('web-event-email');
 						
 			$this->eventNewsletterSignup($rec, $person);	
 		

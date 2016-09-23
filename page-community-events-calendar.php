@@ -110,37 +110,62 @@ get_header();
 			
 				<section class="entry-content">
 
-				<div class="container community-events-calendar">
+				<div class="community-events-calendar">
 					
-					<div class="row wrap-calendar-intro ">
-						<div class="col-md-8 col-md-offset-2">
+					<div class="row wrap-calendar-intro">
+						<div class="col-md-8">
 							<?php get_template_part('partials/social', 'horizontal'); ?>
 							
 							<?php the_content(); ?>
-											
+							
+							<hr>
+							
+							<div class="wrap-category-form">
+								<form method="get" id="category-form">
+									<label>Select events to show</label>
+									<?php wp_dropdown_categories(array(
+										'show_option_none'   => 'All Events',
+										'option_none_value'  => '',
+										'orderby'            => 'NAME', 
+										'order'              => 'ASC',
+										'show_count'         => false,
+										'hide_empty'         => false, 
+										'echo'               => true,
+										'hierarchical'       => true, 
+										'name'               => 'cid',
+										'depth'              => 1,
+										'taxonomy'           => 'category',
+										'hide_if_empty'      => false,
+										'selected'			 => $cid,
+										'id'				 => 'category-select'
+									)); ?>
+									
+								</form>
+							</div>										
 						</div>
 						
-						<div class="col-md-4 col-md-offset-4">
-							<form method="get" id="category-form">
-								<label>Select events to show</label>
-								<?php wp_dropdown_categories(array(
-									'show_option_none'   => 'All Events',
-									'option_none_value'  => '',
-									'orderby'            => 'NAME', 
-									'order'              => 'ASC',
-									'show_count'         => false,
-									'hide_empty'         => false, 
-									'echo'               => true,
-									'hierarchical'       => true, 
-									'name'               => 'cid',
-									'depth'              => 1,
-									'taxonomy'           => 'category',
-									'hide_if_empty'      => false,
-									'selected'			 => $cid,
-									'id'				 => 'category-select'
-								)); ?>
-								
-							</form>
+					
+						<div class="col-md-4">
+							<aside id="sidebar">
+								<div class="widget-area complementary">
+									
+									<!-- Event Email Signup -->
+									<aside class="widget">
+										<h3 class="widgettitle">Email Sign-up Form</h3>
+										<p>Sign-up to receive event updates from <?php echo(get_bloginfo('name')); ?>.</p>
+										<form class="form-inline" method="post" action="/event-newsletter/">
+											<div class="form-group">
+												<label class="sr-only">Enter your email address</label>
+												<input name="email" type="email" class="form-control" placeholder="Your email address">
+											</div>
+											<input type="hidden" name="load_timestamp" value="<?php echo(time()); ?>">
+											<input type="hidden" name="submitted" value="1">
+											<button type="submit" class="btn btn-default">Go</button>
+										</form>
+									</aside>
+									
+								</div>
+							</aside>
 						</div>
 					</div>
 

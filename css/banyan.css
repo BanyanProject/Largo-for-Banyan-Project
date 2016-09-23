@@ -1224,7 +1224,17 @@ li.related-story {
 	margin: 0 0 20px;	
 }
 
-/* Sidebar & Widgets: Related Articles and Event Listings */
+/* 7.2 Sidebar & Widgets: Calendar  */
+
+.community-events-calendar #sidebar {
+	margin: 65px 0 30px;
+}
+.community-events-calendar #sidebar .widget {
+	margin: 0 0 20px;	
+}
+
+
+/* 7.3 Sidebar & Widgets: Related Articles and Event Listings */
 #wrap-related-articles article img.wp-post-image
 , .stories #wrap-related-articles article img.wp-post-image
 , #wrap-related-articles article img.avatar
